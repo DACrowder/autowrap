@@ -32,15 +32,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import os.path
-import re
-from collections import defaultdict
-from autowrap.ConversionProvider import setup_converter_registry
-from autowrap.DeclResolver import (ResolvedClass, ResolvedEnum, ResolvedTypeDef,
-								   ResolvedFunction)
-from autowrap.Types import CppType
+from autowrap.DeclResolver import (ResolvedClass, ResolvedEnum, ResolvedTypeDef, ResolvedFunction)
+from autowrap.code_generators.CodeGeneratorBase import CodeGeneratorBase
 import autowrap.Code as Code
 import logging as logger
-
+from autowrap.code_generators.Utils import augment_arg_names
 
 IS_PY3 = True
 try:
@@ -59,218 +55,15 @@ else:
 	bytes = str
 	basestring = basestring
 
-
-def augment_arg_names(method):
-	""" 
-		replaces missing arg_names with "in_%d" % i, where i is the position
-		number of the arg 
-	"""
-	return [(t, n if (n and n != "self") else "in_%d" % i)
-			for i, (n, t) in enumerate(method.arguments)]
-
-
-def fixed_include_dirs(include_boost):
-	import pkg_resources
-	boost = pkg_resources.resource_filename("autowrap", "data_files/boost")
-	data = pkg_resources.resource_filename("autowrap", "data_files")
-	autowrap_internal = pkg_resources.resource_filename("autowrap", "data_files/autowrap")
-
-	if not include_boost:
-		return [autowrap_internal]
-	else:
-		return [boost, data, autowrap_internal]
-
-
-class CodeGeneratorBase(object):
-	"""
-    This is the main Code Generator.
-
-    Its main entry function is "create_pyx_file" which generates the pyx file
-    from the input (given in the initializiation).
-
-    The actual conversion of input/output arguments is done in the
-	ConversionProviders for each argument type.
-	"""
-
-	def __init__(self, resolved, instance_mapping, pyx_target_path=None,
-				 manual_code=None, extra_cimports=None, allDecl={}):
-		if manual_code is None:
-			manual_code = dict()
-
-		self.manual_code = manual_code
-		self.extra_cimports = extra_cimports
-
-		self.include_shared_ptr = True
-		self.include_refholder = True
-		self.include_numpy = False
-
-		self.target_path = os.path.abspath(pyx_target_path)
-		self.target_pxd_path = self.target_path.split(".pyx")[0] + ".pxd"
-		self.target_dir = os.path.dirname(self.target_path)
-
-		# If true, we will write separate pxd and pyx files (need to ensure the
-		# right code goes to header if we use pxd headers). Alternatively, we
-		# will simply write a single pyx file.
-		self.write_pxd = len(allDecl) > 0
-
-		## Step 1: get all classes of current module
-		self.classes = [d for d in resolved if isinstance(d, ResolvedClass)]
-		self.enums = [d for d in resolved if isinstance(d, ResolvedEnum)]
-		self.functions = [d for d in resolved if isinstance(d, ResolvedFunction)]
-		self.typedefs = [d for d in resolved if isinstance(d, ResolvedTypeDef)]
-
-		self.resolved = []
-		self.resolved.extend(sorted(self.typedefs, key=lambda d: d.name))
-		self.resolved.extend(sorted(self.enums, key=lambda d: d.name))
-		self.resolved.extend(sorted(self.functions, key=lambda d: d.name))
-		self.resolved.extend(sorted(self.classes, key=lambda d: d.name))
-
-		self.instance_mapping = instance_mapping
-		self.allDecl = allDecl
-
-		## Step 2: get classes of complete project (includes other modules)
-		self.all_typedefs = self.typedefs
-		self.all_enums = self.enums
-		self.all_functions = self.functions
-		self.all_classes = self.classes
-		self.all_resolved = self.resolved
-		if len(allDecl) > 0:
-
-			self.all_typedefs = []
-			self.all_enums = []
-			self.all_functions = []
-			self.all_classes = []
-			for modname, v in allDecl.items():
-				self.all_classes.extend([d for d in v["decls"] if isinstance(d, ResolvedClass)])
-				self.all_enums.extend([d for d in v["decls"] if isinstance(d, ResolvedEnum)])
-				self.all_functions.extend([d for d in v["decls"] if isinstance(d, ResolvedFunction)])
-				self.all_typedefs.extend([d for d in v["decls"] if isinstance(d, ResolvedTypeDef)])
-
-			self.all_resolved = []
-			self.all_resolved.extend(sorted(self.all_typedefs, key=lambda d: d.name))
-			self.all_resolved.extend(sorted(self.all_enums, key=lambda d: d.name))
-			self.all_resolved.extend(sorted(self.all_functions, key=lambda d: d.name))
-			self.all_resolved.extend(sorted(self.all_classes, key=lambda d: d.name))
-
-		# Register using all classes so that we know about the complete project
-		self.cr = setup_converter_registry(self.all_classes, self.all_enums, instance_mapping)
-		self.top_level_code = []
-		self.top_level_pyx_code = []
-		self.class_codes = defaultdict(list)
-		self.class_codes_extra = defaultdict(list)
-		self.class_pxd_codes = defaultdict(list)
-		self.wrapped_enums_cnt = 0
-		self.wrapped_classes_cnt = 0
-		self.wrapped_methods_cnt = 0
-
-	def get_include_dirs(self, include_boost):
-		if self.pxd_dir is not None:
-			return fixed_include_dirs(include_boost) + [self.pxd_dir]
-		else:
-			return fixed_include_dirs(include_boost)
-
-	def setup_cimport_paths(self):
-		pxd_dirs = set()
-		for inst in self.all_classes + self.all_enums + self.all_functions + self.all_typedefs:
-			pxd_path = os.path.abspath(inst.cpp_decl.pxd_path)
-			pxd_dir = os.path.dirname(pxd_path)
-			pxd_dirs.add(pxd_dir)
-			pxd_file = os.path.basename(pxd_path)
-			inst.pxd_import_path, __ = os.path.splitext(pxd_file)
-		assert len(pxd_dirs) <= 1, "pxd files must be located in same directory"
-		self.pxd_dir = pxd_dirs.pop() if pxd_dirs else None
-
-	def filterout_iterators(self, methods):
-		"""
-		Splits methods into iterators, and non_iterators
-		:param methods: The resolved methods to parse for iterator annotations 
-		:return: (iterators, non_iterator_methods)
-		"""
-
-		def parse(anno):
-			m = re.match(r"(\S+)\((\S+)\)", anno)
-			assert m is not None, "invalid iter annotation"
-			name, type_str = m.groups()
-			return name, CppType.from_string(type_str)
-
-		begin_iterators = dict()
-		end_iterators = dict()
-		non_iter_methods = defaultdict(list)
-		for name, mi in methods.items():
-			for method in mi:
-				annotations = method.cpp_decl.annotations
-				if "wrap-iter-begin" in annotations:
-					py_name, res_type = parse(annotations["wrap-iter-begin"])
-					begin_iterators[py_name] = (method, res_type)
-				elif "wrap-iter-end" in annotations:
-					py_name, res_type = parse(annotations["wrap-iter-end"])
-					end_iterators[py_name] = (method, res_type)
-				else:
-					non_iter_methods[name].append(method)
-
-		begin_names = set(begin_iterators.keys())
-		end_names = set(end_iterators.keys())
-		common_names = begin_names & end_names
-		if begin_names != end_names:
-			# TODO: diesen fall testen
-			raise Exception("iter declarations not balanced")
-
-		for py_name in common_names:
-			__, res_type_begin = begin_iterators[py_name]
-			__, res_type_end = end_iterators[py_name]
-			assert res_type_begin == res_type_end, "iter value types do not match"
-
-		begin_methods = dict((n, m) for n, (m, __) in begin_iterators.items())
-		end_methods = dict((n, m) for n, (m, __) in end_iterators.items())
-		res_types = dict((n, t) for n, (__, t) in end_iterators.items())
-
-		iterators = dict()
-		for n in common_names:
-			iterators[n] = (begin_methods[n], end_methods[n], res_types[n])
-
-		return iterators, non_iter_methods
-
-	def create_code_file(self, debug=False):
-		"""This should create the actual code file
-
-		It calls create_wrapper_for_class, create_wrapper_for_enum and
-		create_wrapper_for_free_function respectively to create the code for
-		all classes, enums and free functions.
-		"""
-		raise NotImplementedError("Code generation must be implemented by inheriting children")
-
-
-class CLRGenerator(CodeGeneratorBase):
-	def __init__(self, resolved, instance_mapping, pyx_target_path=None, manual_code=None, extra_cimports=None,
-				 allDecl={}):
-		if IS_PY3:
-			super().__init__(resolved, instance_mapping, pyx_target_path, manual_code,
-												extra_cimports, allDecl)
-		else:
-			super(CodeGeneratorBase, self).__init__(resolved, instance_mapping, pyx_target_path, manual_code,
-													extra_cimports, allDecl)
-
-	def create_code_file(self, debug=False):
-		"""This creates the actual C++/CLI code which can be compiled to MSIL
-	
-		It calls create_wrapper_for_class, create_wrapper_for_enum and
-		create_wrapper_for_free_function, ... etc, to create the wrapping code
-		"""
-		self.setup_cimport_paths()
-		self.create_cimports()
-		self.create_foreign_cimports()
-		self.create_includes()
-
-
 class CythonGenerator(CodeGeneratorBase):
 	def __init__(self, resolved, instance_mapping, pyx_target_path=None, manual_code=None, extra_cimports=None,
 				 allDecl={}):
 		if IS_PY3:
 			super().__init__(resolved, instance_mapping, pyx_target_path, manual_code,
-					 extra_cimports, allDecl)
+							 extra_cimports, allDecl)
 		else:
 			super(CodeGeneratorBase, self).__init__(resolved, instance_mapping, pyx_target_path, manual_code,
-											extra_cimports, allDecl)
+													extra_cimports, allDecl)
 
 
 	def create_code_file(self, debug=False):
@@ -296,14 +89,14 @@ class CythonGenerator(CodeGeneratorBase):
 		create_for(ResolvedClass, self.create_wrapper_for_class)
 		create_for(ResolvedEnum, self.create_wrapper_for_enum)
 		create_for(ResolvedFunction, self.create_wrapper_for_free_function)
-	
+
 		# resolve extra
 		for clz, codes in self.class_codes_extra.items():
 			if clz not in self.class_codes:
 				raise Exception("Cannot attach to class", clz, "make sure all wrap-attach are in the same file as parent class")
 			for c in codes:
 				self.class_codes[clz].add(c)
-	
+
 		# Create code for the pyx file
 		if self.write_pxd:
 			pyx_code = self.create_default_cimports().render()
@@ -311,33 +104,33 @@ class CythonGenerator(CodeGeneratorBase):
 		else:
 			pyx_code = "\n".join(ci.render() for ci in self.top_level_code)
 			pyx_code += "\n".join(ci.render() for ci in self.top_level_pyx_code)
-	
+
 		pyx_code += " \n"
 		names = set()
 		for n, c in self.class_codes.items():
 			pyx_code += c.render()
 			pyx_code += " \n"
 			names.add(n)
-	
+
 		# manual code which does not extend wrapped classes:
 		for name, c in self.manual_code.items():
 			if name not in names:
 				pyx_code += c.render()
 			pyx_code += " \n"
-	
+
 		# Create code for the pxd file
 		pxd_code = "\n".join(ci.render() for ci in self.top_level_code)
 		pxd_code += " \n"
 		for n, c in self.class_pxd_codes.items():
 			pxd_code += c.render()
 			pxd_code += " \n"
-	
+
 		if debug:
 			print(pxd_code)
 			print(pyx_code)
 		with open(self.target_path, "w") as fp:
 			fp.write(pyx_code)
-	
+
 		if self.write_pxd:
 			with open(self.target_pxd_path, "w") as fp:
 				fp.write(pxd_code)
@@ -351,7 +144,7 @@ class CythonGenerator(CodeGeneratorBase):
 		logger.info("create wrapper for enum %s" % name)
 		code = Code.Code()
 		enum_pxd_code = Code.Code()
-	
+
 		enum_pxd_code.add("""
                    |
                    |cdef class $name:
@@ -393,24 +186,24 @@ class CythonGenerator(CodeGeneratorBase):
 			pyname = "__" + r_class.name
 		else:
 			pyname = cname
-	
+
 		logger.info("create wrapper for class %s" % cname)
 		cy_type = self.cr.cython_type(cname)
 		class_pxd_code = Code.Code()
 		class_code = Code.Code()
-	
+
 		# Class documentation (multi-line)
 		docstring = "Cython implementation of %s\n" % cy_type
 		if r_class.cpp_decl.annotations.get("wrap-inherits", "") != "":
 			docstring += "     -- Inherits from %s\n" % r_class.cpp_decl.annotations.get("wrap-inherits", "")
-	
+
 		extra_doc = r_class.cpp_decl.annotations.get("wrap-doc", "")
 		for extra_doc_line in extra_doc:
 			docstring += "\n    " + extra_doc_line
-	
+
 		if r_class.methods:
 			shared_ptr_inst = "cdef shared_ptr[%s] inst" % cy_type
-	
+
 			if len(r_class.wrap_manual_memory) != 0 and r_class.wrap_manual_memory[0] != "__old-model":
 				shared_ptr_inst = r_class.wrap_manual_memory[0]
 			if self.write_pxd:
@@ -508,16 +301,16 @@ class CythonGenerator(CodeGeneratorBase):
 		if any(v for v in has_ops.values()):
 			code = self.create_special_cmp_method(r_class, has_ops)
 			class_code.add(code)
-	
+
 		codes = self._create_iter_methods(iterators, r_class.instance_map, r_class.local_map)
 		for ci in codes:
 			class_code.add(ci)
-	
+
 		extra_methods_code = self.manual_code.get(cname)
 		if extra_methods_code:
 			class_code.add(extra_methods_code)
-	
-	
+
+
 		for class_name in r_class.cpp_decl.annotations.get("wrap-attach", []):
 			code = Code.Code()
 			display_name = r_class.cpp_decl.annotations.get("wrap-as", [r_class.name])[0]
@@ -525,7 +318,7 @@ class CythonGenerator(CodeGeneratorBase):
 			tmp = self.class_codes_extra.get(class_name, [])
 			tmp.append(code)
 			self.class_codes_extra[class_name] = tmp
-	
+
 	def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
 		"""
 		Create Iterator methods using the Python yield keyword
@@ -536,15 +329,15 @@ class CythonGenerator(CodeGeneratorBase):
 			meth_code = Code.Code()
 			begin_name = begin_decl.name
 			end_name = end_decl.name
-	
+
 			# TODO: this step is duplicated from DeclResolver.py
 			# can we combine both maps to one single map ?
 			res_type = res_type.transformed(local_mapping)
 			res_type = res_type.inv_transformed(instance_mapping)
-	
+
 			cy_type = self.cr.cython_type(res_type)
 			base_type = res_type.base_type
-	
+
 			meth_code.add("""
                             |
                             |def $name(self):
@@ -562,14 +355,14 @@ class CythonGenerator(CodeGeneratorBase):
 		return codes
 
 	def _create_overloaded_method_decl(self, py_name, dispatched_m_names, methods, use_return, use_kwargs=False):
-	
+
 		logger.info("   create wrapper decl for overloaded method %s" % py_name)
-	
+
 		method_code = Code.Code()
 		kwargs = ""
 		if use_kwargs:
 			kwargs = ", **kwargs"
-	
+
 		docstrings = "\n"
 		for method in methods:
 			# Prepare docstring
@@ -578,7 +371,7 @@ class CythonGenerator(CodeGeneratorBase):
 			if len(extra_doc) > 0:
 				docstrings += "\n" + " " * 12 + extra_doc
 			docstrings += "\n"
-	
+
 		method_code.add("""
                           |
                           |def $py_name(self, *args $kwargs):
@@ -592,12 +385,12 @@ class CythonGenerator(CodeGeneratorBase):
 			args = augment_arg_names(method)
 			if not args:
 				check_expr = "not args"
-	
+
 				# Special case for empty constructors with a pass
 				if method.cpp_decl.annotations.get("wrap-pass-constructor", False):
 					assert use_kwargs, "Cannot use wrap-pass-constructor without setting kwargs (e.g. outside a constructor)"
 					check_expr = 'kwargs.get("__createUnsafeObject__") is True'
-	
+
 			else:
 				tns = [(t, "args[%d]" % i) for i, (t, n) in enumerate(args)]
 				checks = ["len(args)==%d" % len(tns)]
@@ -617,7 +410,7 @@ class CythonGenerator(CodeGeneratorBase):
 		return method_code
 
 	def create_wrapper_for_method(self, cdcl, py_name, methods):
-	
+
 		if py_name.startswith("operator"):
 			__, __, op = py_name.partition("operator")
 			if op in ["!=", "==", "<", "<=", ">", ">="]:
@@ -643,7 +436,7 @@ class CythonGenerator(CodeGeneratorBase):
 				assert len(methods) == 1, "overloaded operator+= not suppored"
 				code = self.create_special_iadd_method(cdcl, methods[0])
 				return [code]
-	
+
 		if len(methods) == 1:
 			code = self.create_wrapper_for_nonoverloaded_method(cdcl, py_name, methods[0])
 			return [code]
@@ -661,7 +454,7 @@ class CythonGenerator(CodeGeneratorBase):
 																	dispatched_m_name,
 																	method)
 				codes.append(code)
-	
+
 			code = self._create_overloaded_method_decl(py_name, dispatched_m_names, methods, True)
 			codes.append(code)
 			return codes
@@ -673,7 +466,7 @@ class CythonGenerator(CodeGeneratorBase):
 		conversion back to Python is returned as "cleanups".
 		"""
 		args = augment_arg_names(method)
-	
+
 		# Step 0: collect conversion data for input args and call
 		# input_conversion for more sophisticated conversion code (e.g.
 		# std::vector<Obj>)
@@ -695,17 +488,17 @@ class CythonGenerator(CodeGeneratorBase):
 			call_args.append(call_as)
 			in_types.append(t)
 			checks.append((n, converter.type_check_expression(t, n)))
-	
+
 		# Step 1: create method decl statement
 		if not is_free_fun:
 			py_signature_parts.insert(0, "self")
-	
+
 		# Prepare docstring
 		docstring = "Cython signature: %s" % method
 		extra_doc = method.cpp_decl.annotations.get("wrap-doc", "")
 		if len(extra_doc) > 0:
 			docstring += "\n" + " "*8 + extra_doc
-	
+
 		py_signature = ", ".join(py_signature_parts)
 		code.add("""
                    |
@@ -721,7 +514,7 @@ class CythonGenerator(CodeGeneratorBase):
 		# above:
 		for conv_code in input_conversion_codes:
 			code.add(conv_code)
-	
+
 		return call_args, cleanups, in_types
 
 	def _create_wrapper_for_attribute(self, attribute):
@@ -729,13 +522,13 @@ class CythonGenerator(CodeGeneratorBase):
 		name = attribute.name
 		wrap_as = attribute.cpp_decl.annotations.get("wrap-as", name)
 		wrap_constant = attribute.cpp_decl.annotations.get("wrap-constant", False)
-	
+
 		t = attribute.type_
-	
+
 		converter = self.cr.get(t)
 		py_type = converter.matching_python_type(t)
 		conv_code, call_as, cleanup = converter.input_conversion(t, name, 0)
-	
+
 		code.add("""
             |
             |property $wrap_as:
@@ -767,18 +560,18 @@ class CythonGenerator(CodeGeneratorBase):
 
 			indented.add(cleanup)
 			code.add(indented)
-	
+
 		to_py_code = converter.output_conversion(t, "_r", "py_result")
 		access_stmt = converter.call_method(t, "self.inst.get().%s" % name)
-	
+
 		cy_type = self.cr.cython_type(t)
-	
+
 		if isinstance(to_py_code, basestring):
 			to_py_code = "    %s" % to_py_code
-	
+
 		if isinstance(access_stmt, basestring):
 			access_stmt = "    %s" % access_stmt
-	
+
 		if t.is_ptr:
 			# For pointer types, we need to guard against unsafe access
 			code.add("""
@@ -802,10 +595,10 @@ class CythonGenerator(CodeGeneratorBase):
 		return code
 
 	def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):
-	
+
 		logger.info("   create wrapper for %s ('%s')" % (py_name, method))
 		meth_code = Code.Code()
-	
+
 		call_args, cleanups, in_types = self._create_fun_decl_and_input_conversion(
 			meth_code,
 			py_name,
@@ -816,11 +609,11 @@ class CythonGenerator(CodeGeneratorBase):
 		cpp_name = method.cpp_decl.name
 		call_args_str = ", ".join(call_args)
 		cy_call_str = "self.inst.get().%s(%s)" % (cpp_name, call_args_str)
-	
+
 		res_t = method.result_type
 		out_converter = self.cr.get(res_t)
 		full_call_stmt = out_converter.call_method(res_t, cy_call_str)
-	
+
 		if method.with_nogil:
 			meth_code.add("""
               |    with nogil:
@@ -870,38 +663,38 @@ class CythonGenerator(CodeGeneratorBase):
 			self.class_codes[static_clz].add(code)
 			orig_cpp_name = decl.cpp_decl.name # original cpp name (not displayname)
 			code = self._create_wrapper_for_free_function(decl, static_name, orig_cpp_name)
-	
+
 		self.top_level_pyx_code.append(code)
 
 	def _create_wrapper_for_free_function(self, decl, name=None, orig_cpp_name=None):
 		if name is None:
 			name = decl.name
-	
+
 		# Need to the original cpp name and not the display name (which is for
 		# Python only and C++ knows nothing about)
 		if orig_cpp_name is None:
 			orig_cpp_name = decl.name
-	
+
 		fun_code = Code.Code()
-	
+
 		call_args, cleanups, in_types = \
 			self._create_fun_decl_and_input_conversion(fun_code, name, decl, is_free_fun=True)
-	
+
 		call_args_str = ", ".join(call_args)
 		mangled_name = "_" + orig_cpp_name + "_" + decl.pxd_import_path
 		cy_call_str = "%s(%s)" % (mangled_name, call_args_str)
-	
+
 		res_t = decl.result_type
 		out_converter = self.cr.get(res_t)
 		full_call_stmt = out_converter.call_method(res_t, cy_call_str)
-	
+
 		if isinstance(full_call_stmt, basestring):
 			fun_code.add("""
                 |    $full_call_stmt
                 """, locals())
 		else:
 			fun_code.add(full_call_stmt)
-	
+
 		for cleanup in reversed(cleanups):
 			if not cleanup:
 				continue
@@ -910,15 +703,15 @@ class CythonGenerator(CodeGeneratorBase):
 			fun_code.add(cleanup)
 
 		to_py_code = out_converter.output_conversion(res_t, "_r", "py_result")
-	
+
 		out_vars = ["py_result"]
 		if to_py_code is not None:  # for non void return value
-	
+
 			if isinstance(to_py_code, basestring):
 				to_py_code = "    %s" % to_py_code
 			fun_code.add(to_py_code)
 			fun_code.add("    return %s" % (", ".join(out_vars)))
-	
+
 		return fun_code
 
 
@@ -932,9 +725,9 @@ class CythonGenerator(CodeGeneratorBase):
 					code = self.create_special_copy_method(class_decl)
 					codes.append(code)
 			real_constructors.append(cons)
-	
+
 		if len(real_constructors) == 1:
-	
+
 			if real_constructors[0].cpp_decl.annotations.get("wrap-pass-constructor", False):
 				# We have a single constructor that cannot be called (except
 				# with the magic keyword), simply check the magic word
@@ -974,15 +767,15 @@ class CythonGenerator(CodeGeneratorBase):
 		"""
 		logger.info("   create wrapper for non overloaded constructor %s" % py_name)
 		cons_code = Code.Code()
-	
+
 		call_args, cleanups, in_types = \
 			self._create_fun_decl_and_input_conversion(cons_code, py_name, cons_decl)
-	
+
 		wrap_pass = cons_decl.cpp_decl.annotations.get("wrap-pass-constructor", False)
 		if wrap_pass:
 			cons_code.add( "    pass")
 			return cons_code
-	
+
 		# create instance of wrapped class
 		call_args_str = ", ".join(call_args)
 		name = class_decl.name
@@ -996,7 +789,7 @@ class CythonGenerator(CodeGeneratorBase):
 			if isinstance(cleanup, basestring):
 				cleanup = "    %s" % cleanup
 			cons_code.add(cleanup)
-	
+
 		return cons_code
 
 	def create_special_mul_method(self, cdcl, mdcl):
@@ -1072,10 +865,10 @@ class CythonGenerator(CodeGeneratorBase):
 	def create_special_getitem_method(self, mdcl):
 		logger.info("   create wrapper for operator[]")
 		meth_code = Code.Code()
-	
+
 		(call_arg,), cleanups, (in_type,) = \
 			self._create_fun_decl_and_input_conversion(meth_code, "__getitem__", mdcl)
-	
+
 		meth_code.add("""
                      |    cdef long _idx = $call_arg
                      """, locals())
@@ -1094,13 +887,13 @@ class CythonGenerator(CodeGeneratorBase):
                      """, locals())
 
 		# call wrapped method and convert result value back to python
-	
+
 		cy_call_str = "deref(self.inst.get())[%s]" % call_arg
 
 		res_t = mdcl.result_type
 		out_converter = self.cr.get(res_t)
 		full_call_stmt = out_converter.call_method(res_t, cy_call_str)
-	
+
 		if isinstance(full_call_stmt, basestring):
 			meth_code.add("""
                 |    $full_call_stmt
@@ -1118,12 +911,12 @@ class CythonGenerator(CodeGeneratorBase):
 		out_var = "py_result"
 		to_py_code = out_converter.output_conversion(res_t, "_r", out_var)
 		if to_py_code is not None:  # for non void return value
-	
+
 			if isinstance(to_py_code, basestring):
 				to_py_code = "    %s" % to_py_code
 			meth_code.add(to_py_code)
 			meth_code.add("    return $out_var", locals())
-	
+
 		return meth_code
 
 	def create_cast_methods(self, mdecls):
@@ -1141,14 +934,14 @@ class CythonGenerator(CodeGeneratorBase):
 			res_t = mdecl.result_type
 			cy_t = self.cr.cython_type(res_t)
 			out_converter = self.cr.get(res_t)
-	
+
 			code.add("""
                      |
                      |def $py_name(self):""", locals())
 
 			call_stmt = "<%s>(deref(self.inst.get()))" % cy_t
 			full_call_stmt = out_converter.call_method(res_t, call_stmt)
-	
+
 			if isinstance(full_call_stmt, basestring):
 				code.add("""
                     |    $full_call_stmt
@@ -1175,7 +968,7 @@ class CythonGenerator(CodeGeneratorBase):
 					   '!=': 3,
 					   '>=': 5, }
 		inv_op_code_map = dict((v, k) for (k, v) in op_code_map.items())
-	
+
 		implemented_op_codes = tuple(op_code_map[k] for (k, v) in ops.items() if v)
 		meth_code.add("""
            |
@@ -1194,7 +987,7 @@ class CythonGenerator(CodeGeneratorBase):
 			meth_code.add("""    if op==$op:
                             |        return deref(self_casted.inst.get())
                             + $op_sign deref(other_casted.inst.get())""",
-					  locals())
+						  locals())
 		return meth_code
 
 	def create_special_copy_method(self, class_decl):
@@ -1235,15 +1028,15 @@ class CythonGenerator(CodeGeneratorBase):
 		for module in self.allDecl:
 			# We skip our own module
 			if os.path.basename(self.target_path).split(".pyx")[0] != module:
-	
+
 				for resolved in self.allDecl[module]["decls"]:
-	
+
 					# We need to import classes and enums that could be used in
 					# the Cython code in the current module 
-	
+
 					# use Cython name, which correctly imports template classes (instead of C name)
 					name = resolved.name
-	
+
 					if resolved.__class__ in (ResolvedEnum,):
 						if resolved.cpp_decl.annotations.get("wrap-attach"):
 							# No need to import attached classes as they are
@@ -1253,7 +1046,7 @@ class CythonGenerator(CodeGeneratorBase):
 						else:
 							code.add("from $module cimport $name", locals())
 					if resolved.__class__ in (ResolvedClass, ):
-	
+
 						# Skip classes that explicitely should not have a pxd
 						# import statement (abstract base classes and the like)
 						if not resolved.no_pxd_import:
@@ -1261,12 +1054,12 @@ class CythonGenerator(CodeGeneratorBase):
 								code.add("from $module cimport __$name", locals())
 							else:
 								code.add("from $module cimport $name", locals())
-	
+
 			else:
 				logger.info("Skip imports from self (own module %s)" % module)
-	
+
 		self.top_level_code.append(code)
-	
+
 	def create_cimports(self):
 		self.create_std_cimports()
 		code = Code.Code()
@@ -1285,7 +1078,7 @@ class CythonGenerator(CodeGeneratorBase):
 				code.add("from $import_from cimport $name as $mangled_name", locals())
 			elif resolved.__class__ in (ResolvedTypeDef, ):
 				code.add("from $import_from cimport $name", locals())
-	
+
 		self.top_level_code.append(code)
 
 	def create_default_cimports(self):
@@ -1333,7 +1126,7 @@ class CythonGenerator(CodeGeneratorBase):
 		if self.extra_cimports is not None:
 			for stmt in self.extra_cimports:
 				code.add(stmt)
-	
+
 		self.top_level_code.append(code)
 		return code
 
