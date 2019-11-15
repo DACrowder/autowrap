@@ -190,10 +190,143 @@ class CodeGeneratorBase(object):
 		return iterators, non_iter_methods
 
 	def create_code_file(self, debug=False):
-		"""This should create the actual code file
-
+		"""This creates the actual Cython code
 		It calls create_wrapper_for_class, create_wrapper_for_enum and
 		create_wrapper_for_free_function respectively to create the code for
 		all classes, enums and free functions.
 		"""
-		raise NotImplementedError("Code generation must be implemented by inheriting children")
+		self.setup_cimport_paths()
+		self.create_cimports()
+		self.create_foreign_cimports()
+		self.create_includes()
+
+		def create_for(clz, method):
+			for resolved in self.resolved:
+				if resolved.wrap_ignore:
+					continue
+				if isinstance(resolved, clz):
+					method(resolved)
+
+		# first wrap classes, so that self.class_codes[..] is initialized
+		# for attaching enums or static functions
+		create_for(ResolvedClass, self.create_wrapper_for_class)
+		create_for(ResolvedEnum, self.create_wrapper_for_enum)
+		create_for(ResolvedFunction, self.create_wrapper_for_free_function)
+
+		# resolve extra
+		for clz, codes in self.class_codes_extra.items():
+			if clz not in self.class_codes:
+				raise Exception("Cannot attach to class", clz, "make sure all wrap-attach are in the same file as parent class")
+			for c in codes:
+				self.class_codes[clz].add(c)
+
+		# Create code for the pyx file
+		if self.write_pxd:
+			pyx_code = self.create_default_cimports().render()
+			pyx_code += "\n".join(ci.render() for ci in self.top_level_pyx_code)
+		else:
+			pyx_code = "\n".join(ci.render() for ci in self.top_level_code)
+			pyx_code += "\n".join(ci.render() for ci in self.top_level_pyx_code)
+
+		pyx_code += " \n"
+		names = set()
+		for n, c in self.class_codes.items():
+			pyx_code += c.render()
+			pyx_code += " \n"
+			names.add(n)
+
+		# manual code which does not extend wrapped classes:
+		for name, c in self.manual_code.items():
+			if name not in names:
+				pyx_code += c.render()
+			pyx_code += " \n"
+
+		# Create code for the pxd file
+		pxd_code = "\n".join(ci.render() for ci in self.top_level_code)
+		pxd_code += " \n"
+		for n, c in self.class_pxd_codes.items():
+			pxd_code += c.render()
+			pxd_code += " \n"
+
+		if debug:
+			print(pxd_code)
+			print(pyx_code)
+		with open(self.target_path, "w") as fp:
+			fp.write(pyx_code)
+
+		if self.write_pxd:
+			with open(self.target_pxd_path, "w") as fp:
+				fp.write(pxd_code)
+
+	# --- ABSTRACT METHODS ---
+	def create_wrapper_for_enum(self, decl):
+		raise NotImplementedError
+
+	def create_wrapper_for_class(self, r_class):
+		raise NotImplementedError
+
+	def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
+		raise NotImplementedError
+
+	def _create_overloaded_method_decl(self, py_name, dispatched_m_names, methods, use_return, use_kwargs=False):
+		raise NotImplementedError
+
+	def create_wrapper_for_method(self, cdcl, py_name, methods):
+		raise NotImplementedError
+
+	def _create_fun_decl_and_input_conversion(self, code, py_name, method, is_free_fun=False):
+		raise NotImplementedError
+
+	def _create_wrapper_for_attribute(self, attribute):
+		raise NotImplementedError
+
+	def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):
+		raise NotImplementedError
+
+	def create_wrapper_for_free_function(self, decl):
+		raise NotImplementedError
+
+	def _create_wrapper_for_free_function(self, decl, name=None, orig_cpp_name=None):
+		raise NotImplementedError
+
+	def create_wrapper_for_constructor(self, class_decl, constructors):
+		raise NotImplementedError
+
+	def create_wrapper_for_nonoverloaded_constructor(self, class_decl, py_name, cons_decl):
+		raise NotImplementedError
+
+	def create_special_mul_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_add_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_iadd_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_getitem_method(self, mdcl):
+		raise NotImplementedError
+
+	def create_cast_methods(self, mdecls):
+		raise NotImplementedError
+
+	def create_special_cmp_method(self, cdcl, ops):
+		raise NotImplementedError
+
+	def create_special_copy_method(self, class_decl):
+		raise NotImplementedError
+
+	def create_foreign_cimports(self):
+		raise NotImplementedError
+
+	def create_cimports(self):
+		raise NotImplementedError
+
+	def create_default_cimports(self):
+		raise NotImplementedError
+
+	def create_std_cimports(self):
+		raise NotImplementedError
+
+	def create_includes(self):
+		raise NotImplementedError

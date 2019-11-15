@@ -69,7 +69,7 @@ class CLRGenerator(CodeGeneratorBase):
 
 	def create_code_file(self, debug=False):
 		"""This creates the actual C++/CLI code which can be compiled to MSIL
-	
+
 		It calls create_wrapper_for_class, create_wrapper_for_enum and
 		create_wrapper_for_free_function, ... etc, to create the wrapping code
 		"""
@@ -77,3 +77,75 @@ class CLRGenerator(CodeGeneratorBase):
 		self.create_cimports()
 		self.create_foreign_cimports()
 		self.create_includes()
+
+	def create_wrapper_for_enum(self, decl):
+		raise NotImplementedError
+
+	def create_wrapper_for_class(self, r_class):
+		raise NotImplementedError
+
+	def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
+		raise NotImplementedError
+
+	def _create_overloaded_method_decl(self, py_name, dispatched_m_names, methods, use_return, use_kwargs=False):
+		raise NotImplementedError
+
+	def create_wrapper_for_method(self, cdcl, py_name, methods):
+		raise NotImplementedError
+
+	def _create_fun_decl_and_input_conversion(self, code, py_name, method, is_free_fun=False):
+		raise NotImplementedError
+
+	def _create_wrapper_for_attribute(self, attribute):
+		raise NotImplementedError
+
+	def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):
+		raise NotImplementedError
+
+	def create_wrapper_for_free_function(self, decl):
+		raise NotImplementedError
+
+	def _create_wrapper_for_free_function(self, decl, name=None, orig_cpp_name=None):
+		raise NotImplementedError
+
+	def create_wrapper_for_constructor(self, class_decl, constructors):
+		raise NotImplementedError
+
+	def create_wrapper_for_nonoverloaded_constructor(self, class_decl, py_name, cons_decl):
+		raise NotImplementedError
+
+	def create_special_mul_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_add_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_iadd_method(self, cdcl, mdcl):
+		raise NotImplementedError
+
+	def create_special_getitem_method(self, mdcl):
+		raise NotImplementedError
+
+	def create_cast_methods(self, mdecls):
+		raise NotImplementedError
+
+	def create_special_cmp_method(self, cdcl, ops):
+		raise NotImplementedError
+
+	def create_special_copy_method(self, class_decl):
+		raise NotImplementedError
+
+	def create_foreign_cimports(self):
+		raise NotImplementedError
+
+	def create_cimports(self):
+		raise NotImplementedError
+
+	def create_default_cimports(self):
+		raise NotImplementedError
+
+	def create_std_cimports(self):
+		raise NotImplementedError
+
+	def create_includes(self):
+		raise NotImplementedError
