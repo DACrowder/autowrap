@@ -87,7 +87,7 @@ class CLRGenerator(CodeGeneratorBase):
 		enum_code.add("""
                    |
                    |enum class $name {\n\t$content\n};
-                 """, name=name, content=",\n\t".join(enumerated))
+                 """, name=name, content=",\n\t".join([c.strip() for c in enumerated]))
 
 		self.class_codes[decl.name] = enum_code
 		for class_name in decl.cpp_decl.annotations.get("wrap-attach", []):
