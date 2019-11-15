@@ -69,18 +69,22 @@ def main():
 
 def _main(argv):
     parser = optparse.OptionParser(version=("%d.%d.%d" % autowrap.version))
-    parser.add_option("--addons", action="append", metavar="addon")
-    parser.add_option("--converters", action="append", metavar="converter")
-    parser.add_option("--out", action="store", nargs=1, metavar="pyx file")
+    parser.add_option("--addons", action="append", metavar="addon", help="addon code files")
+    parser.add_option("--converters", action="append", metavar="converter", help="special type converters")
+    parser.add_option("--out", action="store", nargs=1, metavar="pyx file", help="the output file (ending in .pyx)")
+    parser.add_option("--clr", action="store_true", dest="clr", default=False, help="generate c++/cli instead of cython")
 
     options, input_ = parser.parse_args(argv)
 
     assert options.out is not None, "need --out argument"
     out = options.out
-    __, out_ext = os.path.splitext(out)
+    p, out_ext = os.path.splitext(out)
 
     if out_ext != ".pyx":
-        parser.exit(1, "\nout file has wrong extension: '.pyx' required\n")
+        out = os.path.basename(p)
+        out += ".cpp" if options.clr else ".pyx" 
+        print(out)
+        #parser.exit(1, "\nout file has wrong extension: '.pyx' required\n")
 
     def collect(from_, extension):
         collected = []
