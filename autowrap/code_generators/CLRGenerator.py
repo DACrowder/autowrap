@@ -67,6 +67,71 @@ class CLRGenerator(CodeGeneratorBase):
 			super(CodeGeneratorBase, self).__init__(resolved, instance_mapping, pyx_target_path, manual_code,
 													extra_cimports, allDecl)
 
+	def create_code_file(self, debug=False):
+		self.setup_cimport_paths()
+		self.create_cimports()
+		self.create_foreign_cimports()
+		self.create_includes()
+
+		def create_for(clz, method):
+			for resolved in self.resolved:
+				if resolved.wrap_ignore:
+					continue
+				if isinstance(resolved, clz):
+					method(resolved)
+
+		# first wrap classes, so that self.class_codes[..] is initialized
+		# for attaching enums or static functions
+		create_for(ResolvedClass, self.create_wrapper_for_class)
+		create_for(ResolvedEnum, self.create_wrapper_for_enum)
+		create_for(ResolvedFunction, self.create_wrapper_for_free_function)
+
+		# resolve extra
+		for clz, codes in self.class_codes_extra.items():
+			if clz not in self.class_codes:
+				raise Exception("Cannot attach to class", clz, "make sure all wrap-attach are in the same file as parent class")
+			for c in codes:
+				self.class_codes[clz].add(c)
+
+		# Create code for the pyx file
+		if self.write_pxd:
+			pyx_code = self.create_default_cimports().render()
+			pyx_code += "\n".join(ci.render() for ci in self.top_level_pyx_code)
+		else:
+			pyx_code = "\n".join(ci.render() for ci in self.top_level_code)
+			pyx_code += "\n".join(ci.render() for ci in self.top_level_pyx_code)
+
+		pyx_code += " \n"
+		names = set()
+		for n, c in self.class_codes.items():
+			pyx_code += c.render()
+			pyx_code += "\n};"
+			names.add(n)
+
+		# manual code which does not extend wrapped classes:
+		for name, c in self.manual_code.items():
+			if name not in names:
+				pyx_code += c.render()
+			pyx_code += "\n};"
+
+		# Create code for the pxd file
+		pxd_code = "\n".join(ci.render() for ci in self.top_level_code)
+		pxd_code += "\n};"
+		for n, c in self.class_pxd_codes.items():
+			pxd_code += c.render()
+			pxd_code += "\n};"
+
+		if debug:
+			print(pxd_code)
+			print(pyx_code)
+		with open(self.target_path, "w") as fp:
+			fp.write(pyx_code)
+
+		if self.write_pxd:
+			with open(self.target_pxd_path, "w") as fp:
+				fp.write(pxd_code)
+
+
 	def create_wrapper_for_enum(self, decl):
 		"""
 		Creates a c++/CLI enum from an enum decl
@@ -112,16 +177,85 @@ class CLRGenerator(CodeGeneratorBase):
 		class_code = Code.Code()
 
 		# Class documentation (multi-line)
-		docstring = "Cython implementation of %s\n" % cy_type
+		docstring = "/// <summary>\n\t///\tC++/CLI implementation of %s\n" % cy_type
 		if r_class.cpp_decl.annotations.get("wrap-inherits", "") != "":
-			docstring += "     -- Inherits from %s\n" % r_class.cpp_decl.annotations.get("wrap-inherits", "")
+			docstring += "\t///\tInherits from %s\n" % r_class.cpp_decl.annotations.get("wrap-inherits", "")
 
 		extra_doc = r_class.cpp_decl.annotations.get("wrap-doc", "")
 		for extra_doc_line in extra_doc:
-			docstring += "\n    " + extra_doc_line
+			docstring += "\n\t///\t" + extra_doc_line
+		docstring += "\t/// </summary>" if docstring.endswith("\n") else "\n\t///</summary>"
 
-		# -- ADD CODE HERE --
+		if r_class.methods:
+			shared_ptr_inst = "%s^ inst" % cy_type
+			if len(r_class.wrap_manual_memory) != 0 and r_class.wrap_manual_memory[0] != "__old-model":
+				shared_ptr_inst = r_class.wrap_manual_memory[0]
+			if self.write_pxd:
+				class_pxd_code.add("""
+								|
+								|public ref class $pyname 
+								|{
+								|    $docstring
+								|
+								|    $shared_ptr_inst
+								|
+								""", locals())
+				shared_ptr_inst = "// see .pxd file for cdef of inst ptr" # do not implement in pyx file, only in pxd file
 
+			if len(r_class.wrap_manual_memory) != 0:
+				class_code.add("""
+                                |
+                                |public ref class $pyname
+                                |{
+                                |    $docstring
+                                |
+                                """, locals())
+			else:
+				class_code.add("""
+|
+|public ref class $pyname
+|{
+|    $docstring
+|public:
+|	$pyname() {
+|		isDisposed = false;
+|	}
+|	~$pyname() {
+|		if (_isDisposed) { return; }
+|		this->!$pyname();
+|		_isDisposed = true;
+|	}
+|
+|	$shared_ptr_inst
+|
+|protected:
+|	!$pyname();
+|
+|private:
+|	bool _isDisposed;
+|
+""", 
+							   locals())
+		else:
+			# Deal with pure structs (no methods)
+			class_pxd_code.add("""
+                            |
+                            |value struct $pyname
+                            |{
+                            |    $docstring
+                            |
+    						|
+                            |
+                            """, locals())
+
+		if len(r_class.wrap_hash) != 0:
+			class_code.add("""
+						|
+						|    GetHashCode() {
+						|    	return hash(%(this.inst).{});
+						|	}
+						""".format(r_class.wrap_hash[0]), locals())
+		
 		self.class_pxd_codes[cname] = class_pxd_code
 		self.class_codes[cname] = class_code
 
@@ -160,14 +294,16 @@ class CLRGenerator(CodeGeneratorBase):
 		if extra_methods_code:
 			class_code.add(extra_methods_code)
 
+		class_pxd_code.add("\n};")
 
 		for class_name in r_class.cpp_decl.annotations.get("wrap-attach", []):
 			code = Code.Code()
 			display_name = r_class.cpp_decl.annotations.get("wrap-as", [r_class.name])[0]
-			code.add("%s = %s" % (display_name, "__" + r_class.name))
+			code.add("%s = %s;" % (display_name, "__" + r_class.name))
 			tmp = self.class_codes_extra.get(class_name, [])
 			tmp.append(code)
 			self.class_codes_extra[class_name] = tmp
+
 
 	def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
 		return []
