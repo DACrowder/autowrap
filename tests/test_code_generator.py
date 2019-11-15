@@ -34,7 +34,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import autowrap.DeclResolver
-import autowrap.CodeGeneratorProvider
 import autowrap.PXDParser
 import autowrap.Utils
 import autowrap.Code

@@ -66,6 +66,20 @@ def test_from_command_line():
         os.chdir(old_dir)
 
 
+def test_clr_from_command_line():
+    import os
+    old_dir = os.path.abspath(os.getcwd())
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(os.path.join(script_dir, "test_files"))
+    args = ["full_lib/*.pxd", "--out", "out.pyx", "--addons=/addons",
+            "--converters=converters", "--clr"]
+    from autowrap.Main import _main
+    try:
+        _main(args)
+    finally:
+        os.chdir(old_dir)
+
+
 def test_run():
 
     from autowrap.Main import run

@@ -12,6 +12,11 @@ class Cklass {
         int i_;
         Cklass(int i): i_(i) { };
         Cklass(const Cklass & i): i_(i.i_) { };
+        enum DEF { 
+            D, 
+            E = 4, 
+            F = 2 
+        };
 };
 
 class C_second {
@@ -19,6 +24,7 @@ class C_second {
         int i_;
         C_second(int i): i_(i) { };
         C_second(const C_second & i): i_(i.i_) { };
+        enum ABC { A, B, C };
 };
 
 

@@ -88,8 +88,13 @@ class Code(object):
             if isinstance(content, basestring):
                 result.append(_indent + content)
             else:
-                for line in content._render(_indent=_indent + "    "):
-                    result.append(line)
+                try:
+                    for line in content._render(_indent=_indent + "    "):
+                        result.append(line)
+                except:
+                    pass
+                finally:
+                    pass
         return result
 
     def render(self):

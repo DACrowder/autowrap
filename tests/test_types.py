@@ -30,10 +30,8 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
-
 from autowrap.Types import CppType
 from .utils import expect_exception
-
 
 def testTypeParse():
     _testType("unsigned int")

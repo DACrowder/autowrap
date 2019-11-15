@@ -17,4 +17,3 @@ cdef extern from "C.hpp":
         int i_
         Cklass(int i)
         Cklass(Cklass & i)
-

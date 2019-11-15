@@ -9,11 +9,11 @@ import pytest
 
 import autowrap
 import autowrap.Code
-import autowrap.CodeGeneratorProvider
 import autowrap.DeclResolver
 import autowrap.Main
 import autowrap.PXDParser
 import autowrap.Utils
+from tests.test_code_generator import test_libcpp
 
 from .utils import expect_exception
 

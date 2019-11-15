@@ -81,9 +81,7 @@ def _main(argv):
     p, out_ext = os.path.splitext(out)
 
     if out_ext != ".pyx":
-        out = os.path.basename(p)
-        out += ".cpp" if options.clr else ".pyx" 
-        print(out)
+        out = os.path.basename(p) + ".pyx"
         #parser.exit(1, "\nout file has wrong extension: '.pyx' required\n")
 
     def collect(from_, extension):
@@ -122,7 +120,7 @@ def _main(argv):
     print("   %5d type converter files to consider" % len(converters))
     print("\n")
 
-    run(pxds, addons, converters, out)
+    run(pxds, addons, converters, out, clr=options.clr)
 
 
 def collect_manual_code(addons):
@@ -198,12 +196,12 @@ def run_cython(inc_dirs, extra_opts, out):
     compile(out, options=options)
 
 
-def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs, extra_opts, include_boost=True, allDecl=[]):
+def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs, extra_opts, include_boost=True, allDecl=[], clr=False):
     cimports, manual_code = collect_manual_code(addons)
     register_converters(converters)
     inc_dirs = autowrap.generate_code(decls, instance_map=instance_map, target=out, 
             debug=False, manual_code=manual_code, 
-            extra_cimports=cimports, include_boost=include_boost, allDecl=allDecl)
+            extra_cimports=cimports, include_boost=include_boost, allDecl=allDecl,clr=clr)
 
     if extra_inc_dirs is not None:
         inc_dirs += extra_inc_dirs
@@ -212,7 +210,7 @@ def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_
     return inc_dirs
 
 
-def run(pxds, addons, converters, out, extra_inc_dirs=None, extra_opts=None):
+def run(pxds, addons, converters, out, extra_inc_dirs=None, extra_opts=None, clr=False):
     decls, instance_map = autowrap.parse(pxds, ".")
     return create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs,
-                               extra_opts)
+                               extra_opts, clr=clr)
