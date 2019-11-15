@@ -34,7 +34,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 """
 
 import autowrap.DeclResolver
-import autowrap.CodeGenerator
+import autowrap.CodeGeneratorProvider
 import autowrap.PXDParser
 import autowrap.Utils
 import autowrap.Code
@@ -79,7 +79,7 @@ def test_number_conv():
 def test_shared_ptr():
 
     target = os.path.join(test_files, "shared_ptr_test.pyx")
-    include_dirs = autowrap.CodeGenerator.fixed_include_dirs(True) + [test_files]
+    include_dirs = autowrap.CodeGeneratorProvider.fixed_include_dirs(True) + [test_files]
     m = autowrap.Utils.compile_and_import("m", [target, ], include_dirs)
     assert m.__name__ == "m"
 

@@ -9,7 +9,7 @@ import pytest
 
 import autowrap
 import autowrap.Code
-import autowrap.CodeGenerator
+import autowrap.CodeGeneratorProvider
 import autowrap.DeclResolver
 import autowrap.Main
 import autowrap.PXDParser
