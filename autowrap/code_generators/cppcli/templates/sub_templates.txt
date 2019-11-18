@@ -1,0 +1,14 @@
+﻿<method_signature>
+    ${return_type} ${m_method_name}(${params})
+</method_signature>
+
+<method_declaration>
+    ${signature}
+    {
+        ${method_body}
+    }
+</method_declaration>
+
+<field_definition>
+    ${type} ${field_name};
+</field_definition>

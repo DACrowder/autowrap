@@ -1,0 +1,42 @@
+﻿﻿#pragma once
+
+#include "${name_space}/${managed_class_name}.hpp"
+
+${private_define_section}
+
+namespace ${name_space} 
+{
+    public ref class ${managed_class_name}
+    {
+    private:
+        ${static_constructor}
+        ${static_private_methods}
+        ${private_methods}
+
+    protected:
+        ${static_protected_methods}
+        ${protected_methods}
+
+    public:
+        ${static_public_methods}
+
+        ${constructor_methods}
+
+        ~${managed_class_name}() {
+            if (mIsDisposed) {
+                return;
+            }
+            this->!${managed_class_name}();
+            mIsDisposed = true; // maybe need to lock this?
+        }
+
+        !${managed_class_name}()
+        {
+            ${delete_before}
+            delete uPtr;
+            ${delete_after}
+        }
+
+        ${public_methods}
+    };
+};

@@ -199,28 +199,13 @@ class CodeGeneratorBase(object):
 	def create_wrapper_for_class(self, r_class):
 		raise NotImplementedError
 
-	def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
-		raise NotImplementedError
-
-	def _create_overloaded_method_decl(self, py_name, dispatched_m_names, methods, use_return, use_kwargs=False):
-		raise NotImplementedError
-
 	def create_wrapper_for_method(self, cdcl, py_name, methods):
-		raise NotImplementedError
-
-	def _create_fun_decl_and_input_conversion(self, code, py_name, method, is_free_fun=False):
-		raise NotImplementedError
-
-	def _create_wrapper_for_attribute(self, attribute):
 		raise NotImplementedError
 
 	def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):
 		raise NotImplementedError
 
 	def create_wrapper_for_free_function(self, decl):
-		raise NotImplementedError
-
-	def _create_wrapper_for_free_function(self, decl, name=None, orig_cpp_name=None):
 		raise NotImplementedError
 
 	def create_wrapper_for_constructor(self, class_decl, constructors):
