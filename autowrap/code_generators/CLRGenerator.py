@@ -40,6 +40,7 @@ from autowrap.code_generators.CodeGeneratorBase import CodeGeneratorBase
 import autowrap.Code as Code
 import logging as logger
 from autowrap.code_generators.Utils import augment_arg_names
+from cppcli import *
 
 IS_PY3 = True
 try:
@@ -73,7 +74,6 @@ class CLRGenerator(CodeGeneratorBase):
 
 
 	def create_wrapper_for_class(self, decl):
-		
 		# wrap any enum code
 		self.class_codes[decl.name] = self.create_wrapper_for_enum(decl)
 		# handle wrap-as+attach annotations
@@ -90,25 +90,7 @@ class CLRGenerator(CodeGeneratorBase):
 	def create_property_wrapper(self):
 		"""Create a get/set property for field with get/set methods"""
 		pass
+	
 	def create_wrapper_for_enum(self, decl):
-		"""
-		Creates a c++/CLI enum from an enum decl
-		:param decl: the enumeration declaration
-		:return: the enum code
-		"""
-		self.wrapped_enums_cnt += 1
-		if decl.cpp_decl.annotations.get("wrap-attach"):
-			name = "__" + decl.name # indicates attached elsewhere
-		else:
-			name = decl.name
-			logger.info("create wrapper for enum %s" % name)
-
-		enum_code = Code.Code()
-		enumerated = [
-			" {name} = {value} ".format(name=n, value=v) for n, v in decl.items
-		]
-		enum_code.add("""
-                   |
-                   |enum class $name {\n\t$content\n};
-                 """, name=name, content=",\n\t".join([c.strip() for c in enumerated]))
+		return EnumWrapper(decl).render_header()
 

@@ -33,10 +33,20 @@ class ClassWrapper(WrapperBase):
 									  is None else self.implmentation
 
 	def _render_header(self):
-		return Code()
+		with open("./templates/CLRHeaderTemplate.txt", "r") as f:
+			tmpl = "\n".join(f.readlines())
+
+		code = Code()
+		code.add(tmpl, locals())
+		return code
 
 	def _render_impl(self):
-		return Code()
+		with open("./templates/CLRClassTemplate.txt", "r") as f:
+			tmpl = f.readlines()
+		
+		code = Code()
+		code.add(tmpl, locals())
+		return code
 
 
 def MethodWrapper(decl, m_return_type, marshaller_name):
