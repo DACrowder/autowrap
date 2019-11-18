@@ -92,5 +92,5 @@ class CLRGenerator(CodeGeneratorBase):
 		pass
 	
 	def create_wrapper_for_enum(self, decl):
-		return EnumWrapper(decl).render_header()
+		return EnumWrapper(decl)[0]
 
