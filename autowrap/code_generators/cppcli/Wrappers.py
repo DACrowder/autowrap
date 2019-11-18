@@ -7,8 +7,15 @@ class WrapperBase():
 	
 	def render(self):
 		"""renders the c++/cli wrapper code and returns it as a code tuple (header, impl.)"""
+		return self.render_header(), self.render_implmentation()
+	
+	def render_header(self):
+		"""render the header code for this wrapper"""
 		raise NotImplementedError
 
+	def render_implmentation(self):
+		"""Create and return code for the implementation"""
+		raise NotImplementedError
 
 
 class ClassWrapper(WrapperBase):
