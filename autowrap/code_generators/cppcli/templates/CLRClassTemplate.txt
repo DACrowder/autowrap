@@ -6,17 +6,8 @@ ${private_define_section}
 
 namespace ${name_space} 
 {
-    public ref class ${managed_class_name}
+    public ref class ${managed_class_name} : ${interfaces_implemented}
     {
-    private:
-        ${static_constructor}
-        ${static_private_methods}
-        ${private_methods}
-
-    protected:
-        ${static_protected_methods}
-        ${protected_methods}
-
     public:
         ${static_public_methods}
 
@@ -37,6 +28,18 @@ namespace ${name_space}
             ${delete_after}
         }
 
+        ${public_properties}
         ${public_methods}
+
+        private:
+            ${static_constructor}
+            ${static_private_methods}
+            ${private_properties}
+            ${private_methods}
+
+        protected:
+            ${static_protected_methods}
+            ${protected_properties}
+            ${protected_methods}
     };
 };

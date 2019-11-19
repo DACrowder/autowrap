@@ -31,11 +31,24 @@ class ClassWrapper(WrapperBase):
 		"""Create and return code for the implementation"""
 		return self._render_impl() if self.implmentation \
 									  is None else self.implmentation
-
+	
+	def _render_include_section(self):
+		return ""
+	
+	def _render_define_section(self):
+		return ""
+	
+	def _render_enums(self):
+		return ""
+	
 	def _render_header(self):
 		with open("./templates/CLRHeaderTemplate.txt", "r") as f:
 			tmpl = "\n".join(f.readlines())
-
+		# define template variables
+		include_section, define_section = self._render_include_section(), self._render_define_section()
+		namespace, managed_class_name = self.decl.cpp_decl.namespace, self.decl.py_name
+		enums = self._render_enums(), 
+		# Build class wrapper code
 		code = Code()
 		code.add(tmpl, locals())
 		return code
@@ -43,7 +56,6 @@ class ClassWrapper(WrapperBase):
 	def _render_impl(self):
 		with open("./templates/CLRClassTemplate.txt", "r") as f:
 			tmpl = f.readlines()
-		
 		code = Code()
 		code.add(tmpl, locals())
 		return code

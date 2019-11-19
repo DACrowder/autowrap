@@ -2,32 +2,20 @@
 
 ${include_section}
 
-${public_define_section}
+${define_section}
 
 namespace ${name_space} 
 {
-    public ref class ${managed_class_name}
+    public interface class I${managed_class_name}
     {
-    private:
-        ${static_constructor_sig}
-        ${static_private_fields}
-        ${static_private_method_sigs}
+        ${public_property_sigs}
+        ${public_method_sigs}
+    }
 
-        ${native_pointer_type} uPtr; // u for unmanaged, e.g. Native* or m_smart_ptr<Native*>, depending
-
-        ${private_fields}
-        ${private_method_sigs}
-
-    protected:
-        ${static_protected_fields}
-        ${static_protected_method_sigs}
-
-        bool mIsDisposed;
-        ${protected_fields}
-        ${protected_method_sigs}
-
+    public ref class ${managed_class_name} : ${interfaces_implemented}
+    {
     public:
-
+        ${enums}
         ${static_public_fields}
         ${static_public_method_sigs}
 
@@ -37,6 +25,27 @@ namespace ${name_space}
         !${managed_class_name}();
 
         ${public_fields}
+        ${public_property_sigs}
         ${public_method_sigs}
+
+        protected:
+            ${static_protected_fields}
+            ${static_protected_method_sigs}
+
+            bool mIsDisposed;
+            ${protected_fields}
+            ${protected_property_sigs}
+            ${protected_method_sigs}
+
+        private:
+            ${static_constructor_sig}
+            ${static_private_fields}
+            ${static_private_method_sigs}
+
+            ${native_pointer_type} uPtr; // u for unmanaged, e.g. Native* or m_smart_ptr<Native*>, depending
+   
+            ${private_fields}
+            ${private_property_sigs}
+            ${private_method_sigs}
     };
 };
