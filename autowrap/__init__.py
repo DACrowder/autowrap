@@ -51,6 +51,14 @@ def parse(files, root, num_processes=1):
     return DeclResolver.resolve_decls_from_files(files, root, num_processes)
 
 
+def parse_to_json(files, root, num_processes=1):
+    import autowrap.DeclResolver
+    import json
+    c, m = DeclResolver.resolve_decls_from_files(files, root, num_processes)
+    jason = (json.dumps(c), json.dumps(m))
+    return jason
+
+
 def generate_code(decls, instance_map, target, debug=False, manual_code=None,
                   extra_cimports=None, include_boost=True, include_numpy=False, allDecl=[]):
 

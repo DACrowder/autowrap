@@ -310,24 +310,25 @@ class CodeGenerator(object):
         L.info("create wrapper for enum %s" % name)
         code = Code.Code()
         enum_pxd_code = Code.Code()
+        code.add("""
+                   |
+                   |public enum $name
+                   |{
+                   |    $items
+                   |};
+                 """,
+                 name=name, 
+                 items=",\n".join([ "    $name = $value " for (name, value) in decl.items]))
 
         enum_pxd_code.add("""
                    |
-                   |cdef class $name:
-                   |  pass
-                 """, name=name)
-        code.add("""
-                   |
-                   |cdef class $name:
-                 """, name=name)
-        for (name, value) in decl.items:
-            code.add("    $name = $value", name=name, value=value)
-
-        # Add mapping of int (enum) to the value of the enum (as string)
-        code.add("""
-                |
-                |    def getMapping(self):
-                |        return dict([ (v, k) for k, v in self.__class__.__dict__.items() if isinstance(v, int) ])""" )
+                   |public enum $name
+                   |{
+                   |    $items
+                   |};
+                 """,
+                  name=name,
+                  items=",\n".join([ "    $name = $value " for (name, value) in decl.items]))
 
         self.class_codes[decl.name] = code
         self.class_pxd_codes[decl.name] = enum_pxd_code
@@ -369,74 +370,78 @@ class CodeGenerator(object):
             docstring += "\n    " + extra_doc_line
 
         if r_class.methods:
-            shared_ptr_inst = "cdef shared_ptr[%s] inst" % cy_type
+            shared_ptr_inst = "shared_ptr<%s>^ inst;" % cy_type
 
             if len(r_class.wrap_manual_memory) != 0 and r_class.wrap_manual_memory[0] != "__old-model":
                 shared_ptr_inst = r_class.wrap_manual_memory[0]
             if self.write_pxd:
                 class_pxd_code.add("""
                                 |
-                                |cdef class $pyname:
+                                |public ref class $pyname
+                                |{
                                 |    \"\"\"
                                 |    $docstring
                                 |    \"\"\"
-                                |    $shared_ptr_inst
+                                |
                                 |
                                 """, locals())
                 shared_ptr_inst = "# see .pxd file for cdef of inst ptr" # do not implement in pyx file, only in pxd file
 
-            if len(r_class.wrap_manual_memory) != 0:
-                class_code.add("""
-                                |
-                                |cdef class $pyname:
-                                |    \"\"\"
-                                |    $docstring
-                                |    \"\"\"
-                                |
-                                """, locals())
-            else:
-                class_code.add("""
-                                |
-                                |cdef class $pyname:
-                                |    \"\"\"
-                                |    $docstring
-                                |    \"\"\"
-                                |
-                                |    $shared_ptr_inst
-                                |
-                                |    def __dealloc__(self):
-                                |         self.inst.reset()
-                                |
-                                """, locals())
+            class_code.add("""
+                            |
+                            |public ref class $pyname {
+                            |    /**
+                            |       $docstring
+                            |    **/
+                            |    private:
+                            |        $shared_ptr_inst
+                            |        bool mIsDisposed = false;
+                            |    protected:
+                            |        !$pyname() 
+                            |        {
+                            |           ~$pyname();
+                            |        }
+                            |     public:
+                            |        ~$pyname()
+                            |        {
+                            |            Monitor::Enter(mIsDisposed);
+                            |            if (mIsDisposed) 
+                            |            {
+                            |                Monitor::Exit(mIsDisposed);
+                            |                return; 
+                            |            }
+                            |            delete this->inst;
+                            |            mIsDisposed = true;
+                            |            inst = 0x0;
+                            |            Monitor::Exit(mIsDisposed);
+                            |        }
+                            |
+                            |
+                            |
+                            """, locals())
         else:
             # Deal with pure structs (no methods)
             class_pxd_code.add("""
                             |
-                            |cdef class $pyname:
-                            |    \"\"\"
-                            |    $docstring
-                            |    \"\"\"
+                            |public value struct $pyname
+                            |{
+                            |   /**
+                            |       $docstring
+                            |    **/
                             |
-                            |    pass
                             |
-                            """, locals())
-            class_code.add("""
-                            |
-                            |cdef class $pyname:
-                            |    \"\"\"
-                            |    $docstring
-                            |    \"\"\"
                             |
                             """, locals())
 
         if len(r_class.wrap_hash) != 0:
             class_code.add("""
                             |
-                            |    def __hash__(self):
-                            |      # The only required property is that objects which compare equal have
-                            |      # the same hash value:
-                            |      return hash(deref(self.inst.get()).%s )
-                            |
+                            |    virtual int GetHashCode() override 
+                            |    {
+                            |        // The only required property is that objects which compare equal have
+                            |        // the same hash value:
+                            |        return Object.GetHashCode(this->inst.get().%s);
+                            |    }
                             """ % r_class.wrap_hash[0], locals())
 
         self.class_pxd_codes[cname] = class_pxd_code
@@ -690,27 +695,24 @@ class CodeGenerator(object):
         name = attribute.name
         wrap_as = attribute.cpp_decl.annotations.get("wrap-as", name)
         wrap_constant = attribute.cpp_decl.annotations.get("wrap-constant", False)
-
         t = attribute.type_
-
         converter = self.cr.get(t)
+        cy_type = self.cr.cython_type(t)
         py_type = converter.matching_python_type(t)
+        if py_type is None or py_type == "":
+            py_type = t
         conv_code, call_as, cleanup = converter.input_conversion(t, name, 0)
-
-        code.add("""
-            |
-            |property $wrap_as:
-            """, locals())
 
         if wrap_constant:
             code.add("""
-                |    def __set__(self, $py_type $name):
-                |       raise AttributeError("Cannot set constant")
+                |const $wrap_as^ $name; 
                 """, locals())
-
         else:
             code.add("""
-                |    def __set__(self, $py_type $name):
+                |
+                |property $py_type $name;
+                |   void set($py_type $name)
+                |   {
                 """, locals())
 
             # TODO: add mit indent level
@@ -719,7 +721,7 @@ class CodeGenerator(object):
             code.add(indented)
 
             code.add("""
-                |        self.inst.get().$name = $call_as
+                |        this->inst->get()->$name = $call_as;
                 """, locals())
             indented = Code.Code()
 
@@ -727,39 +729,32 @@ class CodeGenerator(object):
                 cleanup = "    %s" % cleanup
 
             indented.add(cleanup)
+            indented.add("  };" )
             code.add(indented)
 
-        to_py_code = converter.output_conversion(t, "_r", "py_result")
-        access_stmt = converter.call_method(t, "self.inst.get().%s" % name)
-
-        cy_type = self.cr.cython_type(t)
-
-        if isinstance(to_py_code, basestring):
-            to_py_code = "    %s" % to_py_code
-
-        if isinstance(access_stmt, basestring):
-            access_stmt = "    %s" % access_stmt
 
         if t.is_ptr:
             # For pointer types, we need to guard against unsafe access
             code.add("""
                 |
-                |    def __get__(self):
-                |        if self.inst.get().%s is NULL:
-                |             raise Exception("Cannot access pointer that is NULL")
+                |   $py_type^ get()
+                |   {
+                |        if (!(this->inst->get()->%s))
+                |        {
+                |             raise Exception("Cannot access pointer that is NULL");
+                |        }
+                |        return msclr::interop::marshal_as<$py_type^, $cy_type&>(this->inst->get()->$name);
+                |   }
                 """ % name, locals())
         else:
             code.add("""
-                |
-                |    def __get__(self):
-                """, locals())
+            |
+            |    $py_type^ get()
+            |    {
+            |        return msclr::interop::marshal_as<$py_type^, $cy_type&>(this->inst->get()->$name);
+            |    }
+            """, locals())
 
-        # increase indent:
-        indented = Code.Code()
-        indented.add(access_stmt)
-        indented.add(to_py_code)
-        code.add(indented)
-        code.add("        return py_result")
         return code
 
     def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):

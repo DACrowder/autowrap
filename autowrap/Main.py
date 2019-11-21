@@ -209,6 +209,16 @@ def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_
 
 
 def run(pxds, addons, converters, out, extra_inc_dirs=None, extra_opts=None):
+    import json
     decls, instance_map = autowrap.parse(pxds, ".")
+
+    with open("./decls.json", "w") as fp:
+        json.dump(decls, fp, default=lambda o: o.__dict__,
+                               sort_keys=True, indent=4)
+
+    with open("./instance_map.json", "w") as fp:
+        print(json.dump(instance_map, fp, default=lambda o: o.__dict__,
+                        sort_keys=True, indent=4))
+
     return create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs,
                                extra_opts)
