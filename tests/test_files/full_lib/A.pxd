@@ -11,11 +11,19 @@ cdef extern from "A.hpp":
     cdef enum testA:
         AA, AAA
 
-    cdef cppclass A_second:
+    cdef cppclass MZProvider:
+        double getMZ()
+        void setMZ(double i)
+
+    cdef cppclass RangeManager:
+        int getNext(int i)
+
+    cdef cppclass A_second(MZProvider, RangeManager):
         int i_
         A_second(int i)
         A_second(A_second & i)
         void callA2()
+        int getNext()
 
     cdef cppclass Aklass:
         # wrap-instances:

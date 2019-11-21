@@ -21,13 +21,27 @@ class Aklass {
     enum KlassE { A1, A2, A3};
 };
 
-class A_second {
+class MZProvider {
+    public:
+        double getMZ() { return mz; }
+        void setMZ(double i) { mz = i; }
+    private:
+        double mz;
+};
+
+class RangeManager {
+    public:
+        int getNext(int i) { return i-1; }
+};
+
+
+class A_second : public MZProvider, public RangeManager {
     public:
         int i_;
         A_second(int i): i_(i) { };
         A_second(const A_second & i): i_(i.i_) { };
         void callA2() {i_++;};
-};
 
+};
 
 #endif

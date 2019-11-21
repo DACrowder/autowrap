@@ -69,20 +69,18 @@ def main():
 
 def _main(argv):
     parser = optparse.OptionParser(version=("%d.%d.%d" % autowrap.version))
-    parser.add_option("--addons", action="append", metavar="addon", help="addon code files")
-    parser.add_option("--converters", action="append", metavar="converter", help="special type converters")
-    parser.add_option("--out", action="store", nargs=1, metavar="pyx file", help="the output file (ending in .pyx)")
-    parser.add_option("--clr", action="store_true", dest="clr", default=False, help="generate c++/cli instead of cython")
+    parser.add_option("--addons", action="append", metavar="addon")
+    parser.add_option("--converters", action="append", metavar="converter")
+    parser.add_option("--out", action="store", nargs=1, metavar="pyx file")
 
     options, input_ = parser.parse_args(argv)
 
     assert options.out is not None, "need --out argument"
     out = options.out
-    p, out_ext = os.path.splitext(out)
+    __, out_ext = os.path.splitext(out)
 
     if out_ext != ".pyx":
-        out = os.path.basename(p) + ".pyx"
-        #parser.exit(1, "\nout file has wrong extension: '.pyx' required\n")
+        parser.exit(1, "\nout file has wrong extension: '.pyx' required\n")
 
     def collect(from_, extension):
         collected = []
@@ -120,7 +118,7 @@ def _main(argv):
     print("   %5d type converter files to consider" % len(converters))
     print("\n")
 
-    run(pxds, addons, converters, out, clr=options.clr)
+    run(pxds, addons, converters, out)
 
 
 def collect_manual_code(addons):
@@ -196,12 +194,12 @@ def run_cython(inc_dirs, extra_opts, out):
     compile(out, options=options)
 
 
-def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs, extra_opts, include_boost=True, allDecl=[], clr=False):
+def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs, extra_opts, include_boost=True, allDecl=[]):
     cimports, manual_code = collect_manual_code(addons)
     register_converters(converters)
     inc_dirs = autowrap.generate_code(decls, instance_map=instance_map, target=out, 
             debug=False, manual_code=manual_code, 
-            extra_cimports=cimports, include_boost=include_boost, allDecl=allDecl,clr=clr)
+            extra_cimports=cimports, include_boost=include_boost, allDecl=allDecl)
 
     if extra_inc_dirs is not None:
         inc_dirs += extra_inc_dirs
@@ -210,7 +208,17 @@ def create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_
     return inc_dirs
 
 
-def run(pxds, addons, converters, out, extra_inc_dirs=None, extra_opts=None, clr=False):
+def run(pxds, addons, converters, out, extra_inc_dirs=None, extra_opts=None):
+    import json
     decls, instance_map = autowrap.parse(pxds, ".")
+
+    with open("./decls.json", "w") as fp:
+        json.dump(decls, fp, default=lambda o: o.__dict__,
+                               sort_keys=True, indent=4)
+
+    with open("./instance_map.json", "w") as fp:
+        print(json.dump(instance_map, fp, default=lambda o: o.__dict__,
+                        sort_keys=True, indent=4))
+
     return create_wrapper_code(decls, instance_map, addons, converters, out, extra_inc_dirs,
-                               extra_opts, clr=clr)
+                               extra_opts)
