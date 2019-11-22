@@ -187,6 +187,9 @@ class CodeGenerator(object):
 
         self.pxd_dir = pxd_dirs.pop() if pxd_dirs else None
 
+    def create_code_file(self, debug=False):
+        self.create_pyx_file(debug)
+
     def create_pyx_file(self, debug=False):
         """This creates the actual Cython code
 
@@ -231,25 +234,27 @@ class CodeGenerator(object):
         names = set()
         for n, c in self.class_codes.items():
             pyx_code += c.render()
-            pyx_code += " \n"
+            pyx_code += "\n};\n"
             names.add(n)
 
         # manual code which does not extend wrapped classes:
         for name, c in self.manual_code.items():
             if name not in names:
                 pyx_code += c.render()
+                pyx_code += "};"
             pyx_code += " \n"
 
         # Create code for the pxd file
-        pxd_code = "\n".join(ci.render() for ci in self.top_level_code)
+        pxd_code = "\n".join([ci.render() for ci in self.top_level_code])
         pxd_code += " \n"
         for n, c in self.class_pxd_codes.items():
             pxd_code += c.render()
-            pxd_code += " \n"
+            pxd_code += "\n};\n"
 
         if debug:
             print(pxd_code)
             print(pyx_code)
+
         with open(self.target_path, "w") as fp:
             fp.write(pyx_code)
 
@@ -308,36 +313,24 @@ class CodeGenerator(object):
         else:
             name = decl.name
         L.info("create wrapper for enum %s" % name)
-        code = Code.Code()
         enum_pxd_code = Code.Code()
-        code.add("""
-                   |
-                   |public enum $name
-                   |{
-                   |    $items
-                   |};
-                 """,
-                 name=name, 
-                 items=",\n".join([ "    $name = $value " for (name, value) in decl.items]))
-
         enum_pxd_code.add("""
                    |
                    |public enum $name
                    |{
-                   |    $items
+                   |$items
                    |};
                  """,
                   name=name,
                   items=",\n".join([ "    $name = $value " for (name, value) in decl.items]))
 
-        self.class_codes[decl.name] = code
         self.class_pxd_codes[decl.name] = enum_pxd_code
 
         for class_name in decl.cpp_decl.annotations.get("wrap-attach", []):
             code = Code.Code()
             display_name = decl.cpp_decl.annotations.get("wrap-as", [decl.name])[0]
             code.add("%s = %s" % (display_name, "__" + decl.name))
-            self.class_codes[class_name].add(code)
+            self.class_pxd_codes[class_name].add(code)
 
     def create_wrapper_for_class(self, r_class):
         """Create Cython code for a single class
@@ -379,10 +372,9 @@ class CodeGenerator(object):
                                 |
                                 |public ref class $pyname
                                 |{
-                                |    \"\"\"
+                                |    /**
                                 |    $docstring
-                                |    \"\"\"
-                                |
+                                |    **/
                                 |
                                 """, locals())
                 shared_ptr_inst = "# see .pxd file for cdef of inst ptr" # do not implement in pyx file, only in pxd file
@@ -396,28 +388,23 @@ class CodeGenerator(object):
                             |    private:
                             |        $shared_ptr_inst
                             |        bool mIsDisposed = false;
+                            |
                             |    protected:
                             |        !$pyname() 
                             |        {
                             |           ~$pyname();
-                            |        }
-                            |     public:
+                            |        };
+                            |
+                            |    public:
                             |        ~$pyname()
                             |        {
-                            |            Monitor::Enter(mIsDisposed);
-                            |            if (mIsDisposed) 
+                            |            lock mtx(mIsDisposed);
+                            |            if (!mIsDisposed) 
                             |            {
-                            |                Monitor::Exit(mIsDisposed);
-                            |                return; 
+                            |                delete this->inst;
+                            |                mIsDisposed = true;
                             |            }
-                            |            delete this->inst;
-                            |            mIsDisposed = true;
-                            |            inst = 0x0;
-                            |            Monitor::Exit(mIsDisposed);
-                            |        }
-                            |
-                            |
-                            |
+                            |        };
                             """, locals())
         else:
             # Deal with pure structs (no methods)
@@ -428,9 +415,6 @@ class CodeGenerator(object):
                             |   /**
                             |       $docstring
                             |    **/
-                            |
-                            |
-                            |
                             """, locals())
 
         if len(r_class.wrap_hash) != 0:
@@ -441,19 +425,19 @@ class CodeGenerator(object):
                             |        // The only required property is that objects which compare equal have
                             |        // the same hash value:
                             |        return Object.GetHashCode(this->inst.get().%s);
-                            |    }
+                            |    };
+                            |
                             """ % r_class.wrap_hash[0], locals())
 
         self.class_pxd_codes[cname] = class_pxd_code
         self.class_codes[cname] = class_code
 
         cons_created = False
+        iterators, non_iter_methods = self.filterout_iterators(r_class.methods)
 
         for attribute in r_class.attributes:
             if not attribute.wrap_ignore:
                 class_code.add(self._create_wrapper_for_attribute(attribute))
-
-        iterators, non_iter_methods = self.filterout_iterators(r_class.methods)
 
         for (name, methods) in non_iter_methods.items():
             if name == r_class.name:
@@ -491,9 +475,10 @@ class CodeGenerator(object):
             tmp.append(code)
             self.class_codes_extra[class_name] = tmp
 
+
     def _create_iter_methods(self, iterators, instance_mapping, local_mapping):
         """
-        Create Iterator methods using the Python yield keyword
+        Create Iterator methods as IEnumerable<T> methods
         """
         codes = []
         for name, (begin_decl, end_decl, res_type) in iterators.items():
@@ -527,16 +512,16 @@ class CodeGenerator(object):
         return codes
 
     def _create_overloaded_method_decl(self, py_name, dispatched_m_names, methods, use_return, use_kwargs=False):
-
         L.info("   create wrapper decl for overloaded method %s" % py_name)
-
         method_code = Code.Code()
         kwargs = ""
         if use_kwargs:
             kwargs = ", **kwargs"
 
-        docstrings = "\n"
+        docstrings, rt = "\n", ""
         for method in methods:
+            if rt == "":
+                rt = method.result_type
             # Prepare docstring
             docstrings += " " * 8 + "  - Cython signature: %s" % method
             extra_doc = method.cpp_decl.annotations.get("wrap-doc", "")
@@ -546,12 +531,14 @@ class CodeGenerator(object):
 
         method_code.add("""
                           |
-                          |def $py_name(self, *args $kwargs):
-                          |    \"\"\"$docstrings\"\"\"
+                          |/**
+                          | $docstrings
+                          |**/
+                          |$rt $py_name(
+                          |{
                         """, locals())
 
         first_iteration = True
-
 
         for (dispatched_m_name, method) in zip(dispatched_m_names, methods):
             args = augment_arg_names(method)
@@ -609,29 +596,9 @@ class CodeGenerator(object):
                 code = self.create_special_iadd_method(cdcl, methods[0])
                 return [code]
 
-        if len(methods) == 1:
-            code = self.create_wrapper_for_nonoverloaded_method(cdcl, py_name, methods[0])
-            return [code]
-        else:
-            # TODO: what happens if two distinct c++ types as float, double
-            # map to the same python type ??
-            # -> 1) detection
-            # -> 2) force method renaming
-            codes = []
-            dispatched_m_names = []
-            for (i, method) in enumerate(methods):
-                dispatched_m_name = "_%s_%d" % (py_name, i)
-                dispatched_m_names.append(dispatched_m_name)
-                code = self.create_wrapper_for_nonoverloaded_method(cdcl,
-                                                                    dispatched_m_name,
-                                                                    method)
-                codes.append(code)
-
-            code = self._create_overloaded_method_decl(py_name, dispatched_m_names, methods, True)
-            codes.append(code)
-            return codes
-
-    def _create_fun_decl_and_input_conversion(self, code, py_name, method, is_free_fun=False):
+        return [self.create_wrapper_for_nonoverloaded_method(cdcl, py_name, m) for m in methods]
+        
+    def _create_fun_decl_and_input_conversion(self, code, py_name, method, is_free_fun=False, is_ctor=False, ctor_precursor=""):
         """ Creates the function declarations and the input conversion to C++
         and the output conversion back to Python.
 
@@ -658,31 +625,36 @@ class CodeGenerator(object):
             py_signature_parts.append("%s %s " % (py_type, n))
             input_conversion_codes.append(conv_code)
             cleanups.append(cleanup)
-            call_args.append(call_as)
+            call_args.append("managed_"+n)
             in_types.append(t)
-            checks.append((n, converter.type_check_expression(t, n)))
-
-        # Step 1: create method decl statement
-        if not is_free_fun:
-            py_signature_parts.insert(0, "self")
+            checks.append((n, t, py_type))
 
         # Prepare docstring
         docstring = "Cython signature: %s" % method
         extra_doc = method.cpp_decl.annotations.get("wrap-doc", "")
         if len(extra_doc) > 0:
             docstring += "\n" + " "*8 + extra_doc
-
-        py_signature = ", ".join(py_signature_parts)
+        py_signature, r_type = ", ".join(py_signature_parts), method.result_type
+        method_decl = ("%s" % method).replace("&", "%")
+        method_decl = method_decl.replace("*", "^")
+        if is_ctor is True:
+            method_decl = " ".join(method_decl.split(" ")[1:])
         code.add("""
-                   |
-                   |def $py_name($py_signature):
-                   |    \"\"\"$docstring\"\"\"
+                   |    $method_decl
+                   |    {
+                   |        /**
+                   |            $docstring
+                   |        **/
                    """, locals())
+
 
         # Step 2a: create code which convert python input args to c++ args of
         # wrapped method
-        for n, check in checks:
-            code.add("    assert %s, 'arg %s wrong type'" % (check, n))
+        for n, t, managed_type in checks:
+            if t != managed_type:
+                code.add("        {to_type} managed_{ARG} = msclr::interop::marshal_as<{to_type}>({ARG});".format(to_type=managed_type, t=t, ARG=n))
+            else:
+                code.add("        {t} mananged_{n} = {n}".format(n=n, t=t))
         # Step 2b: add any more sophisticated conversion code that was created
         # above:
         for conv_code in input_conversion_codes:
@@ -701,114 +673,91 @@ class CodeGenerator(object):
         py_type = converter.matching_python_type(t)
         if py_type is None or py_type == "":
             py_type = t
-        conv_code, call_as, cleanup = converter.input_conversion(t, name, 0)
 
         if wrap_constant:
             code.add("""
-                |const $wrap_as^ $name; 
-                """, locals())
-        else:
-            code.add("""
-                |
-                |property $py_type $name;
-                |   void set($py_type $name)
-                |   {
-                """, locals())
-
-            # TODO: add mit indent level
-            indented = Code.Code()
-            indented.add(conv_code)
-            code.add(indented)
-
-            code.add("""
-                |        this->inst->get()->$name = $call_as;
-                """, locals())
-            indented = Code.Code()
-
-            if isinstance(cleanup, basestring):
-                cleanup = "    %s" % cleanup
-
-            indented.add(cleanup)
-            indented.add("  };" )
-            code.add(indented)
-
-
-        if t.is_ptr:
-            # For pointer types, we need to guard against unsafe access
-            code.add("""
-                |
-                |   $py_type^ get()
-                |   {
-                |        if (!(this->inst->get()->%s))
-                |        {
-                |             raise Exception("Cannot access pointer that is NULL");
+                |    property $wrap_as^ $name {
+                |        $py_type get() 
+                |        { 
+                |            return msclr::interop::marshal_as<$py_type>(this->inst->get()->$name); 
                 |        }
-                |        return msclr::interop::marshal_as<$py_type^, $cy_type&>(this->inst->get()->$name);
-                |   }
-                """ % name, locals())
+                |    };
+                """, locals())
         else:
+            body = "          this->inst->get()->$name = msclr::interop::marshal_as<$cy_type>(v);" \
+                if cy_type != py_type \
+                else "           this->inst->get()->$name = v;"
             code.add("""
-            |
-            |    $py_type^ get()
-            |    {
-            |        return msclr::interop::marshal_as<$py_type^, $cy_type&>(this->inst->get()->$name);
-            |    }
-            """, locals())
+                |
+                |    property $py_type $name;
+                |        void set($py_type v)
+                |        {
+                |    $body
+                |        };
+                """, locals())
 
+            if t.is_ptr:
+                # For pointer types, we need to guard against unsafe access
+                code.add("""
+                    |       $py_type^ get()
+                    |       {
+                    |            if (!(this->inst->get()->$name))
+                    |            {
+                    |                 throw System::NullArgumentException("Cannot access pointer that is NULL");
+                    |            }
+                    |            return msclr::interop::marshal_as<$py_type^>(this->inst->get()->$name);
+                    |       };
+                    |    };
+                    """, locals())
+            else:
+                code.add("""
+                |        $py_type get()
+                |        {
+                |            return msclr::interop::marshal_as<$py_type>(this->inst->get()->$name);
+                |        };
+                |    };
+                """, locals())
         return code
 
     def create_wrapper_for_nonoverloaded_method(self, cdcl, py_name, method):
 
         L.info("   create wrapper for %s ('%s')" % (py_name, method))
         meth_code = Code.Code()
-
-        call_args, cleanups, in_types = self._create_fun_decl_and_input_conversion(meth_code,
-                                                                                   py_name,
-                                                                                   method)
-
+        call_args, cleanups, in_types = self._create_fun_decl_and_input_conversion(
+            meth_code,
+            py_name, 
+            method
+        )
         # call wrapped method and convert result value back to python
         cpp_name = method.cpp_decl.name
-        call_args_str = ", ".join(call_args)
-        cy_call_str = "self.inst.get().%s(%s)" % (cpp_name, call_args_str)
+        call_args_str = ",".join(call_args)
+        cy_call_str = "this->inst->get()->%s(%s)" % (cpp_name, call_args_str)
 
         res_t = method.result_type
         out_converter = self.cr.get(res_t)
-        full_call_stmt = out_converter.call_method(res_t, cy_call_str)
-
-        if method.with_nogil:
-            meth_code.add("""
-              |    with nogil:
-              """)
-            indented = Code.Code()
+        #full_call_stmt = out_converter.call_method(res_t, cy_call_str)
+        if res_t != "void":
+            full_call_stmt = "    {res_t} py_result = msclr::interop::marshal_as<{res_t}>({cy_call_str})"\
+                .format(res_t=res_t, cy_call_str=cy_call_str)
         else:
-            indented = meth_code
+           full_call_stmt = "    {cy_call_str};".format(cy_call_str=cy_call_str)
 
         if isinstance(full_call_stmt, basestring):
-            indented.add("""
-                |    $full_call_stmt
-                """, locals())
+            meth_code.add("""    $full_call_stmt;""", locals())
         else:
-            indented.add(full_call_stmt)
+            meth_code.add(full_call_stmt)
 
         for cleanup in reversed(cleanups):
             if not cleanup:
                 continue
             if isinstance(cleanup, basestring):
-                cleanup = "    %s" % cleanup
-            indented.add(cleanup)
+                cleanup = "        %s" % cleanup
+            meth_code.add(cleanup)
 
-        to_py_code = out_converter.output_conversion(res_t, "_r", "py_result")
+        if res_t != "void": 
+            meth_code.add("        return py_result;")
 
-        if to_py_code is not None:  # for non void return value
-
-            if isinstance(to_py_code, basestring):
-                to_py_code = "    %s" % to_py_code
-            indented.add(to_py_code)
-            indented.add("    return py_result")
-
-        if method.with_nogil:
-            meth_code.add(indented)
-
+        meth_code.add("    };")
         return meth_code
 
     def create_wrapper_for_free_function(self, decl):
@@ -872,7 +821,7 @@ class CodeGenerator(object):
                 to_py_code = "    %s" % to_py_code
             fun_code.add(to_py_code)
             fun_code.add("    return %s" % (", ".join(out_vars)))
-
+        fun_code.add("};")
         return fun_code
 
     def create_wrapper_for_constructor(self, class_decl, constructors):
@@ -891,32 +840,44 @@ class CodeGenerator(object):
             if real_constructors[0].cpp_decl.annotations.get("wrap-pass-constructor", False):
                 # We have a single constructor that cannot be called (except
                 # with the magic keyword), simply check the magic word
+                ca_code = Code.Code()
+                call_args, cleanups, in_types = \
+                    self._create_fun_decl_and_input_conversion(ca_code, class_decl.name, real_constructors[0], is_ctor=True)
+                # create instance of wrapped class
+                call_args_str = ",".join(call_args)
+                name = class_decl.name
+                cy_type = self.cr.cython_type(name)
                 cons_code = Code.Code()
                 cons_code.add("""
+                   |$py_name(__createUnsafeObject__=false, System::Object^[] params) 
+                   |    if (!_createUnsafeObject_)
+                   |    {
+                   |        throw gcnew System::Exception("Cannot call unsafe constructor without explicit approval (pass _createUnsafeObject_=true as a parameter to force construction)
+                   |    }
+                   |    this->inst = shared_ptr<$cy_type>(new $cy_type($call_args_str));
+                   |    mIsDisposed = false;
+                   |};
                    |
-                   |def __init__(self, *args, **kwargs):
-                   |    if not kwargs.get("__createUnsafeObject__") is True:
-                   |        raise Exception("Cannot call this constructor")
                     """, locals())
                 codes.append(cons_code)
                 return codes
 
             code = self.create_wrapper_for_nonoverloaded_constructor(class_decl,
-                                                                     "__init__",
+                                                                     class_decl.name,
                                                                      real_constructors[0])
             codes.append(code)
         else:
             dispatched_cons_names = []
             for (i, constructor) in enumerate(real_constructors):
-                dispatched_cons_name = "_init_%d" % i
+                dispatched_cons_name = class_decl.name
                 dispatched_cons_names.append(dispatched_cons_name)
-                code = self.create_wrapper_for_nonoverloaded_constructor(class_decl,
-                                                                         dispatched_cons_name,
-                                                                         constructor)
+                ctor_precursor = "" # in cases of constructor chaining (so one of {"base", "this", ""})
+                code = self.create_wrapper_for_nonoverloaded_constructor(
+                    class_decl,
+                    dispatched_cons_name,
+                    constructor
+                )
                 codes.append(code)
-            code = self._create_overloaded_method_decl("__init__", dispatched_cons_names,
-                                                       constructors, False, True)
-            codes.append(code)
         return codes
 
     def create_wrapper_for_nonoverloaded_constructor(self, class_decl, py_name,
@@ -930,19 +891,23 @@ class CodeGenerator(object):
         cons_code = Code.Code()
 
         call_args, cleanups, in_types =\
-            self._create_fun_decl_and_input_conversion(cons_code, py_name, cons_decl)
+            self._create_fun_decl_and_input_conversion(cons_code, py_name, cons_decl, is_ctor=True)
 
         wrap_pass = cons_decl.cpp_decl.annotations.get("wrap-pass-constructor", False)
         if wrap_pass:
-            cons_code.add( "    pass")
+            cons_code.add( "}")
             return cons_code
 
         # create instance of wrapped class
-        call_args_str = ", ".join(call_args)
+        call_args_str = ",".join(call_args)
         name = class_decl.name
         cy_type = self.cr.cython_type(name)
-        cons_code.add(
-            """    self.inst = shared_ptr[$cy_type](new $cy_type($call_args_str))""", locals())
+        cons_code.add("""    
+                    |        this->inst = shared_ptr<$cy_type>(new $cy_type($call_args_str));
+                    |        mIsDisposed = false;
+                    |    };
+                    |
+                """,locals())
 
         for cleanup in reversed(cleanups):
             if not cleanup:
@@ -964,13 +929,14 @@ class CodeGenerator(object):
         code = Code.Code()
         code.add("""
         |
-        |def __mul__($name self, $name other not None):
-        |    cdef $cy_t * this = self.inst.get()
-        |    cdef $cy_t * that = other.inst.get()
-        |    cdef $cy_t multiplied = deref(this) * deref(that)
-        |    cdef $name result = $name.__new__($name)
-        |    result.inst = shared_ptr[$cy_t](new $cy_t(multiplied))
-        |    return result
+        |operator *($name a, $name b)
+        |{
+        |    $cy_t & this = *(a->inst->get());
+        |    $cy_t & that = *(b->inst->get());
+        |    $cy_t multiplied = lhs * rhs
+        |    $name result = gcnew $name(multiplied);
+        |    return result;
+        |}
         """, locals())
         return code
 
@@ -985,13 +951,11 @@ class CodeGenerator(object):
         code = Code.Code()
         code.add("""
         |
-        |def __add__($name self, $name other not None):
-        |    cdef $cy_t  * this = self.inst.get()
-        |    cdef $cy_t * that = other.inst.get()
-        |    cdef $cy_t added = deref(this) + deref(that)
-        |    cdef $name result = $name.__new__($name)
-        |    result.inst = shared_ptr[$cy_t](new $cy_t(added))
-        |    return result
+        |operator +($name a, $name b):
+        |    $cy_t & lhs = *(a->inst->get());
+        |    $cy_t & rhs = *(b->inst->get());
+        |    $name result = gcnew $name(lhs + rhs);
+        |    return result;
         """, locals())
         return code
 
@@ -1028,28 +992,32 @@ class CodeGenerator(object):
         meth_code = Code.Code()
 
         (call_arg,), cleanups, (in_type,) =\
-            self._create_fun_decl_and_input_conversion(meth_code, "__getitem__", mdcl)
+            self._create_fun_decl_and_input_conversion(meth_code, "operator [$in_type]", mdcl)
 
         meth_code.add("""
-                     |    cdef long _idx = $call_arg
+                     |    long _idx = $call_arg;
                      """, locals())
 
         if in_type.is_unsigned:
             meth_code.add("""
-                        |    if _idx < 0:
-                        |        raise IndexError("invalid index %d" % _idx)
+                        |    if (_idx < 0)
+                        |    {
+                        |        throw System::IndexOutOfRangeException("provided was index < 0");
+                        |    }
                         """, locals())
 
         size_guard = mdcl.cpp_decl.annotations.get("wrap-upper-limit")
         if size_guard:
             meth_code.add("""
-                     |    if _idx >= self.inst.get().$size_guard:
-                     |        raise IndexError("invalid index %d" % _idx)
+                     |    if (_idx >= this->inst->get().$size_guard)
+                     |    {
+                     |        throw System::IndexOutOfRangeException("invalid index (beyond length of array)");
+                     |    }
                      """, locals())
 
         # call wrapped method and convert result value back to python
 
-        cy_call_str = "deref(self.inst.get())[%s]" % call_arg
+        cy_call_str = "*(this->inst->get())[%s]" % call_arg
 
         res_t = mdcl.result_type
         out_converter = self.cr.get(res_t)
@@ -1076,7 +1044,7 @@ class CodeGenerator(object):
             if isinstance(to_py_code, basestring):
                 to_py_code = "    %s" % to_py_code
             meth_code.add(to_py_code)
-            meth_code.add("    return $out_var", locals())
+            meth_code.add("    return $out_var;", locals())
 
         return meth_code
 
@@ -1095,31 +1063,31 @@ class CodeGenerator(object):
             res_t = mdecl.result_type
             cy_t = self.cr.cython_type(res_t)
             out_converter = self.cr.get(res_t)
-
-            code.add("""
-                     |
-                     |def $py_name(self):""", locals())
-
-            call_stmt = "<%s>(deref(self.inst.get()))" % cy_t
+            call_stmt = "static_cast<%s>(*(this->inst->get()))" % cy_t
             full_call_stmt = out_converter.call_method(res_t, call_stmt)
 
             if isinstance(full_call_stmt, basestring):
-                code.add("""
-                    |    $full_call_stmt
-                    """, locals())
-            else:
-                code.add(full_call_stmt)
+                    full_call_stmt = """{full_call_stmt}""".format(full_call_stmt=full_call_stmt)
 
             to_py_code = out_converter.output_conversion(res_t, "_r", "py_res")
             if isinstance(to_py_code, basestring):
                 to_py_code = "    %s" % to_py_code
             code.add(to_py_code)
-            code.add("""    return py_res""")
+            code.add("""    return py_res;""")
+            code.add("""
+                     |$res_t $py_name()
+                     |{
+                     |     $full_call_stmt;
+                     |     $to_py_code;
+                     |     return py_res;
+                     |};
+                     |
+                     |""", locals())
             codes.append(code)
         return codes
 
     def create_special_cmp_method(self, cdcl, ops):
-        L.info("   create wrapper __richcmp__")
+        L.info("   create wrapper Equals override")
         meth_code = Code.Code()
         name = cdcl.name
         op_code_map = {'<': 0,
@@ -1152,23 +1120,19 @@ class CodeGenerator(object):
         return meth_code
 
     def create_special_copy_method(self, class_decl):
-        L.info("   create wrapper __copy__")
+        L.info("   create wrapper for copy constructor")
         meth_code = Code.Code()
         name = class_decl.name
         cy_type = self.cr.cython_type(name)
         meth_code.add("""
                         |
-                        |def __copy__(self):
-                        |   cdef $name rv = $name.__new__($name)
-                        |   rv.inst = shared_ptr[$cy_type](new $cy_type(deref(self.inst.get())))
-                        |   return rv
-                        """, locals())
-        meth_code.add("""
+                        |    $name($name^ toCopy)
+                        |    {
+                        |       // Copy underlying native type using its Copy constructor
+                        |       $cy_type n = new $cy_type(*(toCopy->inst->get()));
+                        |       return gcnew $name(n);
+                        |    };
                         |
-                        |def __deepcopy__(self, memo):
-                        |   cdef $name rv = $name.__new__($name)
-                        |   rv.inst = shared_ptr[$cy_type](new $cy_type(deref(self.inst.get())))
-                        |   return rv
                         """, locals())
         return meth_code
 
@@ -1225,6 +1189,7 @@ class CodeGenerator(object):
 
     def create_cimports(self):
         self.create_std_cimports()
+        # add using statements for managed types?
         code = Code.Code()
         for resolved in self.all_resolved:
             import_from = resolved.pxd_import_path
@@ -1246,42 +1211,7 @@ class CodeGenerator(object):
 
     def create_default_cimports(self):
         code = Code.Code()
-        # Using embedsignature here does not help much as it is only the Python
-        # signature which does not really specify the argument types. We have
-        # to use a docstring for each method.
-        code.add("""
-                   |#cython: c_string_encoding=ascii  # for cython>=0.19
-                   |#cython: embedsignature=False
-                   |from  libcpp.string  cimport string as libcpp_string
-                   |from  libcpp.string  cimport string as libcpp_utf8_string
-                   |from  libcpp.string  cimport string as libcpp_utf8_output_string
-                   |from  libcpp.set     cimport set as libcpp_set
-                   |from  libcpp.vector  cimport vector as libcpp_vector
-                   |from  libcpp.pair    cimport pair as libcpp_pair
-                   |from  libcpp.map     cimport map  as libcpp_map
-                   |from  libcpp cimport bool
-                   |from  libc.string cimport const_char
-                   |from cython.operator cimport dereference as deref,
-                   + preincrement as inc, address as address
-                   """)
-        if self.include_refholder:
-            code.add("""
-                   |from  AutowrapRefHolder cimport AutowrapRefHolder
-                   |from  AutowrapPtrHolder cimport AutowrapPtrHolder
-                   |from  AutowrapConstPtrHolder cimport AutowrapConstPtrHolder
-                   """)
-        if self.include_shared_ptr:
-            code.add("""
-                   |from  smart_ptr cimport shared_ptr
-                   """)
-        if self.include_numpy:
-            code.add("""
-                   |cimport numpy as np
-                   |import numpy as np
-                   |cimport numpy as numpy
-                   |import numpy as numpy
-                   """)
-
+        # add using statements for managed types?
         return code
 
     def create_std_cimports(self):
@@ -1296,8 +1226,13 @@ class CodeGenerator(object):
     def create_includes(self):
         code = Code.Code()
         code.add("""
-                |cdef extern from "autowrap_tools.hpp":
-                |    char * _cast_const_away(char *)
+                |#include <msclr/lock.h>
+                |#include <msclr/marshal.h>
+                |#include <msclr/marshal_cppstd.h>
+                |#include "Mashallers.h"
                 """)
-
+        if self.include_shared_ptr:
+            code.add("""
+                   |#include "SharedPtr.hpp" 
+                   """)
         self.top_level_code.append(code)

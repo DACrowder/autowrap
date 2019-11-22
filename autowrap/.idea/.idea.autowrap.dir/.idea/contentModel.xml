@@ -1,8 +1,23 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\davea\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\davea\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_.19.00" t="ExcludeRecursive" />
-    <e p="C:\Users\davea\source\repos\MassSpecStudio\tools\OpenMSSharp\autowrap\autowrap" t="IncludeFlat" />
+    <e p="C:\Apps\Anaconda3\DLLs" t="IncludeRecursive" />
+    <e p="C:\Apps\Anaconda3\Lib" t="IncludeRecursive">
+      <e p="site-packages" t="IncludeRecursive">
+        <e p="pythonwin" t="IncludeRecursive" />
+        <e p="win32" t="IncludeRecursive">
+          <e p="Lib" t="IncludeRecursive" />
+        </e>
+      </e>
+    </e>
+    <e p="C:\Users\alex.crowder\.Rider2019.2\config\plugins\python-ce\helpers\python-skeletons" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\config\plugins\python-ce\helpers\typeshed\stdlib\2and3" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\config\plugins\python-ce\helpers\typeshed\stdlib\3" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\config\plugins\python-ce\helpers\typeshed\third_party\2and3" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\config\plugins\python-ce\helpers\typeshed\third_party\3" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\system\python_stubs\1708369100" t="IncludeRecursive" />
+    <e p="C:\Users\alex.crowder\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_.19.00" t="ExcludeRecursive" />
+    <e p="C:\Users\alex.crowder\source\repos\MassSpecStudio\tools\OpenMSSharp\autowrap\autowrap" t="IncludeFlat" />
   </component>
 </project>

@@ -24,6 +24,7 @@ cdef extern from "A.hpp":
         A_second(A_second & i)
         void callA2()
         int getNext()
+        int getNext(int i)
 
     cdef cppclass Aklass:
         # wrap-instances:

@@ -11,7 +11,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getMZ",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "double",
                                 "enum_items": null,
@@ -49,7 +49,7 @@
                                 ]
                             ],
                             "name": "setMZ",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -72,7 +72,7 @@
                 ]
             },
             "name": "MZProvider",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -326,7 +326,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getMZ",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "double",
                                 "enum_items": null,
@@ -642,7 +642,7 @@
                                 ]
                             ],
                             "name": "setMZ",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -958,7 +958,7 @@
                                 ]
                             ],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -980,7 +980,7 @@
                 ]
             },
             "name": "RangeManager",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -1268,7 +1268,7 @@
                                 ]
                             ],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -1560,7 +1560,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -1598,7 +1598,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -1638,7 +1638,7 @@
                                 ]
                             ],
                             "name": "A_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -1674,7 +1674,7 @@
                                 ]
                             ],
                             "name": "A_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -1695,7 +1695,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "callA2",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -1716,7 +1716,43 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "result_type": {
+                                "base_type": "int",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": 0,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        {
+                            "annotations": {},
+                            "arguments": [
+                                [
+                                    "i",
+                                    {
+                                        "base_type": "int",
+                                        "enum_items": null,
+                                        "is_const": false,
+                                        "is_enum": false,
+                                        "is_long": 0,
+                                        "is_ptr": false,
+                                        "is_ref": false,
+                                        "is_unsigned": false,
+                                        "template_args": null,
+                                        "topmost_is_const": false,
+                                        "topmost_is_ref": false
+                                    }
+                                ]
+                            ],
+                            "name": "getNext",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -1740,7 +1776,7 @@
                 ]
             },
             "name": "A_second",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -2028,7 +2064,7 @@
                                 ]
                             ],
                             "name": "A_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -2342,7 +2378,7 @@
                                 ]
                             ],
                             "name": "A_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -2624,7 +2660,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "callA2",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -2906,7 +2942,321 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "result_type": {
+                                "base_type": "int",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": 0,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        "instance_amp": {
+                            "A_KlassE": {
+                                "base_type": "A_KlassE",
+                                "enum_items": [
+                                    [
+                                        "A1",
+                                        0
+                                    ],
+                                    [
+                                        "A2",
+                                        1
+                                    ],
+                                    [
+                                        "A3",
+                                        2
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "A_second": {
+                                "base_type": "A_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Aalias": {
+                                "base_type": "Aklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_KlassE": {
+                                "base_type": "B_KlassE",
+                                "enum_items": [
+                                    [
+                                        "B1",
+                                        0
+                                    ],
+                                    [
+                                        "B2",
+                                        1
+                                    ],
+                                    [
+                                        "B3",
+                                        2
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_KlassKlass": {
+                                "base_type": "B_KlassKlass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_second": {
+                                "base_type": "B_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Bklass": {
+                                "base_type": "Bklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "C_second": {
+                                "base_type": "C_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Cklass": {
+                                "base_type": "Cklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "D_second": {
+                                "base_type": "D_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Dklass": {
+                                "base_type": "Dklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "MZProvider": {
+                                "base_type": "MZProvider",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "RangeManager": {
+                                "base_type": "RangeManager",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "testA": {
+                                "base_type": "testA",
+                                "enum_items": [
+                                    [
+                                        "AA",
+                                        0
+                                    ],
+                                    [
+                                        "AAA",
+                                        1
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "testB": {
+                                "base_type": "testB",
+                                "enum_items": [
+                                    [
+                                        "BB",
+                                        0
+                                    ],
+                                    [
+                                        "BBB",
+                                        1
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        "local_map": {},
+                        "name": "getNext",
+                        "result_type": {
+                            "base_type": "int",
+                            "enum_items": null,
+                            "is_const": false,
+                            "is_enum": false,
+                            "is_long": 0,
+                            "is_ptr": false,
+                            "is_ref": false,
+                            "is_unsigned": false,
+                            "template_args": null,
+                            "topmost_is_const": false,
+                            "topmost_is_ref": false
+                        },
+                        "with_nogil": false,
+                        "wrap_ignore": false
+                    },
+                    {
+                        "arguments": [
+                            [
+                                "i",
+                                {
+                                    "base_type": "int",
+                                    "enum_items": null,
+                                    "is_const": false,
+                                    "is_enum": false,
+                                    "is_long": 0,
+                                    "is_ptr": false,
+                                    "is_ref": false,
+                                    "is_unsigned": false,
+                                    "template_args": null,
+                                    "topmost_is_const": false,
+                                    "topmost_is_ref": false
+                                }
+                            ]
+                        ],
+                        "cpp_decl": {
+                            "annotations": {},
+                            "arguments": [
+                                [
+                                    "i",
+                                    {
+                                        "base_type": "int",
+                                        "enum_items": null,
+                                        "is_const": false,
+                                        "is_enum": false,
+                                        "is_long": 0,
+                                        "is_ptr": false,
+                                        "is_ref": false,
+                                        "is_unsigned": false,
+                                        "template_args": null,
+                                        "topmost_is_const": false,
+                                        "topmost_is_ref": false
+                                    }
+                                ]
+                            ],
+                            "name": "getNext",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -3200,7 +3550,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -3242,7 +3592,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -3282,7 +3632,7 @@
                                 ]
                             ],
                             "name": "Aklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -3318,7 +3668,7 @@
                                 ]
                             ],
                             "name": "Aklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -3340,7 +3690,7 @@
                 ]
             },
             "name": "Aklass",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -3628,7 +3978,7 @@
                                 ]
                             ],
                             "name": "Aklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -3942,7 +4292,7 @@
                                 ]
                             ],
                             "name": "Aklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -4234,7 +4584,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -4272,7 +4622,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -4312,7 +4662,7 @@
                                 ]
                             ],
                             "name": "B_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -4348,7 +4698,7 @@
                                 ]
                             ],
                             "name": "B_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -4386,7 +4736,7 @@
                                 ]
                             ],
                             "name": "processA",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -4409,7 +4759,7 @@
                 ]
             },
             "name": "B_second",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -4697,7 +5047,7 @@
                                 ]
                             ],
                             "name": "B_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5011,7 +5361,7 @@
                                 ]
                             ],
                             "name": "B_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5327,7 +5677,7 @@
                                 ]
                             ],
                             "name": "processA",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5620,7 +5970,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -5665,7 +6015,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -5705,7 +6055,7 @@
                                 ]
                             ],
                             "name": "Bklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5741,7 +6091,7 @@
                                 ]
                             ],
                             "name": "Bklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5762,7 +6112,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "callA2",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -5783,7 +6133,43 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "result_type": {
+                                "base_type": "int",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": 0,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        {
+                            "annotations": {},
+                            "arguments": [
+                                [
+                                    "i",
+                                    {
+                                        "base_type": "int",
+                                        "enum_items": null,
+                                        "is_const": false,
+                                        "is_enum": false,
+                                        "is_long": 0,
+                                        "is_ptr": false,
+                                        "is_ref": false,
+                                        "is_unsigned": false,
+                                        "template_args": null,
+                                        "topmost_is_const": false,
+                                        "topmost_is_ref": false
+                                    }
+                                ]
+                            ],
+                            "name": "getNext",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -5807,7 +6193,7 @@
                 ]
             },
             "name": "Bklass",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -6095,7 +6481,7 @@
                                 ]
                             ],
                             "name": "Bklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -6409,7 +6795,7 @@
                                 ]
                             ],
                             "name": "Bklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -6691,7 +7077,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "callA2",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -6973,7 +7359,321 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "getNext",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+                            "result_type": {
+                                "base_type": "int",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": 0,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        "instance_amp": {
+                            "A_KlassE": {
+                                "base_type": "A_KlassE",
+                                "enum_items": [
+                                    [
+                                        "A1",
+                                        0
+                                    ],
+                                    [
+                                        "A2",
+                                        1
+                                    ],
+                                    [
+                                        "A3",
+                                        2
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "A_second": {
+                                "base_type": "A_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Aalias": {
+                                "base_type": "Aklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_KlassE": {
+                                "base_type": "B_KlassE",
+                                "enum_items": [
+                                    [
+                                        "B1",
+                                        0
+                                    ],
+                                    [
+                                        "B2",
+                                        1
+                                    ],
+                                    [
+                                        "B3",
+                                        2
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_KlassKlass": {
+                                "base_type": "B_KlassKlass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "B_second": {
+                                "base_type": "B_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Bklass": {
+                                "base_type": "Bklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "C_second": {
+                                "base_type": "C_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Cklass": {
+                                "base_type": "Cklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "D_second": {
+                                "base_type": "D_second",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "Dklass": {
+                                "base_type": "Dklass",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "MZProvider": {
+                                "base_type": "MZProvider",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "RangeManager": {
+                                "base_type": "RangeManager",
+                                "enum_items": null,
+                                "is_const": false,
+                                "is_enum": false,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "testA": {
+                                "base_type": "testA",
+                                "enum_items": [
+                                    [
+                                        "AA",
+                                        0
+                                    ],
+                                    [
+                                        "AAA",
+                                        1
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            },
+                            "testB": {
+                                "base_type": "testB",
+                                "enum_items": [
+                                    [
+                                        "BB",
+                                        0
+                                    ],
+                                    [
+                                        "BBB",
+                                        1
+                                    ]
+                                ],
+                                "is_const": false,
+                                "is_enum": true,
+                                "is_long": false,
+                                "is_ptr": false,
+                                "is_ref": false,
+                                "is_unsigned": false,
+                                "template_args": null,
+                                "topmost_is_const": false,
+                                "topmost_is_ref": false
+                            }
+                        },
+                        "local_map": {},
+                        "name": "getNext",
+                        "result_type": {
+                            "base_type": "int",
+                            "enum_items": null,
+                            "is_const": false,
+                            "is_enum": false,
+                            "is_long": 0,
+                            "is_ptr": false,
+                            "is_ref": false,
+                            "is_unsigned": false,
+                            "template_args": null,
+                            "topmost_is_const": false,
+                            "topmost_is_ref": false
+                        },
+                        "with_nogil": false,
+                        "wrap_ignore": false
+                    },
+                    {
+                        "arguments": [
+                            [
+                                "i",
+                                {
+                                    "base_type": "int",
+                                    "enum_items": null,
+                                    "is_const": false,
+                                    "is_enum": false,
+                                    "is_long": 0,
+                                    "is_ptr": false,
+                                    "is_ref": false,
+                                    "is_unsigned": false,
+                                    "template_args": null,
+                                    "topmost_is_const": false,
+                                    "topmost_is_ref": false
+                                }
+                            ]
+                        ],
+                        "cpp_decl": {
+                            "annotations": {},
+                            "arguments": [
+                                [
+                                    "i",
+                                    {
+                                        "base_type": "int",
+                                        "enum_items": null,
+                                        "is_const": false,
+                                        "is_enum": false,
+                                        "is_long": 0,
+                                        "is_ptr": false,
+                                        "is_ref": false,
+                                        "is_unsigned": false,
+                                        "template_args": null,
+                                        "topmost_is_const": false,
+                                        "topmost_is_ref": false
+                                    }
+                                ]
+                            ],
+                            "name": "getNext",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
                             "result_type": {
                                 "base_type": "int",
                                 "enum_items": null,
@@ -7267,7 +7967,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "k_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -7313,7 +8013,7 @@
                 {
                     "annotations": {},
                     "name": "k_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -7336,7 +8036,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "B_KlassKlass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -7358,7 +8058,7 @@
                 ]
             },
             "name": "B_KlassKlass",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -7612,7 +8312,7 @@
                             "annotations": {},
                             "arguments": [],
                             "name": "B_KlassKlass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -7904,7 +8604,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -7942,7 +8642,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -7982,7 +8682,7 @@
                                 ]
                             ],
                             "name": "C_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -8018,7 +8718,7 @@
                                 ]
                             ],
                             "name": "C_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -8040,7 +8740,7 @@
                 ]
             },
             "name": "C_second",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -8328,7 +9028,7 @@
                                 ]
                             ],
                             "name": "C_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -8642,7 +9342,7 @@
                                 ]
                             ],
                             "name": "C_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -8934,7 +9634,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -8972,7 +9672,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -9012,7 +9712,7 @@
                                 ]
                             ],
                             "name": "Cklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -9048,7 +9748,7 @@
                                 ]
                             ],
                             "name": "Cklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -9070,7 +9770,7 @@
                 ]
             },
             "name": "Cklass",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -9358,7 +10058,7 @@
                                 ]
                             ],
                             "name": "Cklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -9672,7 +10372,7 @@
                                 ]
                             ],
                             "name": "Cklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\C.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -9964,7 +10664,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -10002,7 +10702,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -10042,7 +10742,7 @@
                                 ]
                             ],
                             "name": "D_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -10078,7 +10778,7 @@
                                 ]
                             ],
                             "name": "D_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -10116,7 +10816,7 @@
                                 ]
                             ],
                             "name": "runB",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -10139,7 +10839,7 @@
                 ]
             },
             "name": "D_second",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -10427,7 +11127,7 @@
                                 ]
                             ],
                             "name": "D_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -10741,7 +11441,7 @@
                                 ]
                             ],
                             "name": "D_second",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -11057,7 +11757,7 @@
                                 ]
                             ],
                             "name": "runB",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -11350,7 +12050,7 @@
                 "cpp_decl": {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -11388,7 +12088,7 @@
                 {
                     "annotations": {},
                     "name": "i_",
-                    "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                    "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                     "type_": {
                         "base_type": "int",
                         "enum_items": null,
@@ -11428,7 +12128,7 @@
                                 ]
                             ],
                             "name": "Dklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -11464,7 +12164,7 @@
                                 ]
                             ],
                             "name": "Dklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -11486,7 +12186,7 @@
                 ]
             },
             "name": "Dklass",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
             "template_parameters": null
         },
         "instance_map": {
@@ -11774,7 +12474,7 @@
                                 ]
                             ],
                             "name": "Dklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -12088,7 +12788,7 @@
                                 ]
                             ],
                             "name": "Dklass",
-                            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
+                            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\D.pxd",
                             "result_type": {
                                 "base_type": "void",
                                 "enum_items": null,
@@ -12388,7 +13088,7 @@
                 ]
             ],
             "name": "testA",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "items": [
@@ -12452,7 +13152,7 @@
                 ]
             ],
             "name": "A_KlassE",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\A.pxd",
             "template_parameters": null
         },
         "items": [
@@ -12512,7 +13212,7 @@
                 ]
             ],
             "name": "testB",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
             "template_parameters": null
         },
         "items": [
@@ -12576,7 +13276,7 @@
                 ]
             ],
             "name": "B_KlassE",
-            "pxd_path": "C:\\Users\\davea\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
+            "pxd_path": "C:\\Users\\alex.crowder\\source\\repos\\MassSpecStudio\\tools\\OpenMSSharp\\autowrap\\tests\\test_files\\full_lib\\B.pxd",
             "template_parameters": null
         },
         "items": [

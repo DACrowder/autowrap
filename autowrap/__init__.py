@@ -71,8 +71,9 @@ def generate_code(decls, instance_map, target, debug=False, manual_code=None,
                             extra_cimports=extra_cimports,
                             allDecl=allDecl)
     else:
-        from autowrap.code_generators import CythonGenerator
-        gen = CythonGenerator(decls,
+        #from autowrap.code_generators import CythonGenerator
+        from autowrap.CodeGenerator import CodeGenerator
+        gen = CodeGenerator(decls,
                       instance_map,
                       pyx_target_path=target,
                       manual_code=manual_code,

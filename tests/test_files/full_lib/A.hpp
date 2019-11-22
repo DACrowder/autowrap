@@ -41,7 +41,8 @@ class A_second : public MZProvider, public RangeManager {
         A_second(int i): i_(i) { };
         A_second(const A_second & i): i_(i.i_) { };
         void callA2() {i_++;};
-
+        int getNext(int i) override { return RangeManager::getNext(_i) + i; }
+        int getNext() { return RangeManager::getNext(_i); }
 };
 
 #endif
